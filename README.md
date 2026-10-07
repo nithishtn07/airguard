@@ -4,6 +4,26 @@
 
 **AirGuard AI** is a real-time atmospheric intelligence and machine learning predictive platform designed for user-selected regions. The platform monitors real-time air quality metrics, analyzes historical trends, forecasts future Air Quality Index (AQI) values, flags abnormal spikes and spatial hotspots, assesses health risk categories, and provides actionable, data-driven recommendations.
 
+## Key Value Propositions
+
+* **Transparent AI & Machine Learning:** Employs rigorous chronological data splitting, robust regression models (Random Forest), and clearly explained feature importances without fabricating synthetic data.
+* **Proactive Public Health Protection:** Synthesizes environmental data, forecasts, and regulatory action plans into localized, non-diagnostic actionable health advisories.
+* **Premium User Experience:** Built with a professional, dark-themed, multi-page frontend offering Bloomberg-style high-density data visualizations that update in real time.
+* **Zero Fake Data Integrity:** System strictly consumes and presents real data from Open-Meteo, Copernicus CAMS, and SQLite.
+
+## Repository Structure
+
+```text
+airqualitymodel/
+├── backend/          # FastAPI server, core services, route handlers
+├── config/           # Application configuration and settings
+├── database/         # SQLite schemas and session managers
+├── frontend/         # Premium dark-theme modular frontend UI
+├── ml/               # Data pipeline, predictors, and model registry
+├── tests/            # Comprehensive integration and unit test suite
+└── main.py           # Uvicorn entry point
+```
+
 ---
 
 ## Current Phase
