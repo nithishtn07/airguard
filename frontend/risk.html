@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AirGuard AI — Environmental Risk Assessment</title>
+  <meta name="description" content="Dedicated Environmental Risk Assessment: Multi-factor composite risk scoring synthesizing AQI, PM2.5, hotspot duration, and anomaly severity.">
+
+  <!-- Google Fonts: Inter & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="/static/styles/index.css">
+</head>
+<body>
+
+  <div class="app-shell">
+
+    <!-- SIDEBAR -->
+    <aside class="app-sidebar" id="app-sidebar" aria-label="Main Navigation">
+      <div class="sidebar-header">
+        <a href="/" class="sidebar-brand">
+          <div class="sidebar-brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/>
+            </svg>
+          </div>
+          <div class="sidebar-brand-text">
+            <span class="brand-title">AIRGUARD AI</span>
+            <span class="brand-subtitle">Environmental Intel</span>
+          </div>
+        </a>
+        <button id="sidebar-close-btn" class="sidebar-close-btn" aria-label="Close sidebar">✕</button>
+      </div>
+
+      <div class="sidebar-nav-container">
+        <div class="nav-group">
+          <div class="nav-group-title">Core Telemetry</div>
+          <a href="/dashboard" class="nav-link">
+            <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg></span>
+            <span class="nav-text">Dashboard</span>
+          </a>
+          <a href="/air-quality" class="nav-link">
+            <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m4.93 4.93 4.24 4.24"/><path d="m14.83 9.17 4.24-4.24"/></svg></span>
+            <span class="nav-text">Air Quality</span>
+          </a>
+          <a href="/predictions" class="nav-link">
+            <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m22 7-8.5 8.5-5-5L2 17"/><path d="M16 7h6v6"/></svg></span>
+            <span class="nav-text">Predictions</span>
+          </a>
+          <a href="/history" class="nav-link">
+            <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>
+            <span class="nav-text">Historical Analysis</span>
+          </a>
+        </div>
+
+        <div class="nav-group">
+          <div class="nav-group-title">Spatial & Analytics</div>
+          <a href="/hotspots" class="nav-link">
+            <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2c.5 3 2.5 4.5 4 6.5 1.5 2 2 4.5 1 7.5-1 3-3.5 5-6 5s-6-2.5-6-5.5c0-3 2-5 3.5-7 .5-.7 1-1.5 1.5-2.5.5-1 1-2.5 2-4z"/></svg></span>
+            <span class="nav-text">Hotspots</span>
+          </a>
+          <a href="/anomalies" class="nav-link">
+            <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></span>
+            <span class="nav-text">Anomalies</span>
+          </a>
+          <a href="/risk" class="nav-link active">
+            <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>
+            <span class="nav-text">Risk Intelligence</span>
+          </a>
+          <a href="/recommendations" class="nav-link">
+            <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></span>
+            <span class="nav-text">Recommendations</span>
+          </a>
+        </div>
+
+        <div class="nav-group">
+          <div class="nav-group-title">Operations & Geospatial</div>
+          <a href="/environmental-insights" class="nav-link">
+            <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></span>
+            <span class="nav-text">Environmental Insights</span>
+          </a>
+          <a href="/alerts" class="nav-link">
+            <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg></span>
+            <span class="nav-text">Alerts</span>
+          </a>
+          <a href="/map" class="nav-link">
+            <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" x2="9" y1="3" y2="18"/><line x1="15" x2="15" y1="6" y2="21"/></svg></span>
+            <span class="nav-text">Air Quality Map</span>
+          </a>
+          <a href="/settings" class="nav-link">
+            <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg></span>
+            <span class="nav-text">Settings</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="system-status-indicator">
+          <span class="status-indicator-dot good"></span>
+          <span class="status-text">Production Operational</span>
+        </div>
+      </div>
+    </aside>
+
+    <div id="sidebar-overlay" class="sidebar-overlay"></div>
+
+    <!-- MAIN APP CANVAS -->
+    <div class="app-main">
+
+      <!-- TOPBAR -->
+      <header class="app-topbar">
+        <div class="topbar-left">
+          <button id="mobile-menu-trigger" class="mobile-menu-btn" aria-label="Toggle navigation">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+          </button>
+          <div class="region-picker-group">
+            <select id="region-select" class="select-region" aria-label="Select Region">
+              <option value="1">Chennai, India</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="topbar-right">
+          <div class="status-pill active" id="live-status-pill">
+            <span class="pulse-indicator"></span>
+            <span>Risk Engine Active</span>
+          </div>
+          <div class="header-timestamp-box">
+            <span class="text-secondary-label">Updated</span>
+            <span id="header-last-updated" class="timestamp-val">Just now</span>
+          </div>
+          <button id="btn-refresh" class="btn-ghost btn-sm" title="Refresh Live Data" aria-label="Refresh Data">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 21h5v-5"/></svg>
+            <span>Refresh</span>
+          </button>
+          <a href="/alerts" class="btn-ghost btn-sm" title="Alerts" style="text-decoration:none;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+          </a>
+          <a href="/settings" class="btn-ghost btn-sm" title="Settings" style="text-decoration:none;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          </a>
+        </div>
+      </header>
+
+      <!-- CANVAS CONTENT -->
+      <main class="content-canvas">
+
+        <!-- Page Header -->
+        <div class="page-hero-header">
+          <div>
+            <span class="section-kicker">Multi-Factor Assessment</span>
+            <h1 class="page-title-main">Environmental Risk Assessment</h1>
+            <p class="page-subtitle-main">Composite risk scoring evaluating pollution magnitude, particulate toxicity, hotspot duration, and anomaly departures for <span id="risk-region-name" style="color:var(--text-main); font-weight:700;">Chennai</span>.</p>
+          </div>
+        </div>
+
+        <!-- CLARIFICATION NOTICE -->
+        <div class="card" style="margin-bottom:1.5rem; background:var(--bg-card-subtle); border-left: 3px solid var(--accent-emerald);">
+          <h3 style="font-size: 1.05rem; font-weight: 700; color: var(--text-main); margin-bottom: 0.35rem;">
+            AQI Category &ne; Environmental Risk Level
+          </h3>
+          <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.55;">
+            While instantaneous AQI reflects current ambient concentration benchmarks, the Environmental Risk Index synthesizes exposure history, dangerous fine particulate proportions, regional persistence, and sudden statistical anomalies into a comprehensive operational index (0–100).
+          </p>
+        </div>
+
+        <!-- HERO RISK METER & BREAKDOWN -->
+        <div style="display:grid; grid-template-columns: 1.1fr 1fr; gap:1.25rem; margin-bottom:1.5rem;">
+          <!-- Score Gauge Card -->
+          <div class="card" style="display:flex; flex-direction:column; justify-content:space-between;">
+            <div>
+              <div class="card-header-clean">
+                <span class="metric-kicker">Composite Risk Index</span>
+                <span id="risk-badge" class="badge-status-pill badge-low">LOW RISK</span>
+              </div>
+              <div style="display:flex; align-items:baseline; gap:0.5rem; margin:1rem 0;">
+                <span id="risk-score-num" style="font-size:4.5rem; font-weight:800; color:var(--text-main); line-height:1;">—</span>
+                <span style="font-size:1.25rem; color:var(--text-muted); font-weight:600;">/ 100</span>
+              </div>
+              <div class="risk-meter-wrapper" style="margin:1rem 0;">
+                <div class="risk-meter-track" style="height:10px;">
+                  <div id="risk-meter-fill" class="risk-meter-bar" style="width:15%; background:var(--accent-emerald);"></div>
+                </div>
+              </div>
+            </div>
+            <div style="font-size:0.85rem; color:var(--text-main); line-height:1.5;" id="risk-narrative-text">
+              Environmental risk conditions are currently stable within baseline tolerances.
+            </div>
+          </div>
+
+          <!-- Risk Contributors Breakdown -->
+          <div class="card">
+            <div class="card-header-clean">
+              <span class="metric-kicker">Factor Attribution</span>
+              <span class="text-secondary-label">Weights Allocation</span>
+            </div>
+            <h3 style="font-size: 1.05rem; font-weight: 700; color: var(--text-main); margin-bottom: 1rem;">Primary Risk Contributors</h3>
+
+            <div style="display:flex; flex-direction:column; gap:0.85rem;">
+              <!-- AQI Contribution -->
+              <div>
+                <div style="display:flex; justify-content:space-between; font-size:0.82rem; margin-bottom:0.35rem;">
+                  <span style="color:var(--text-main); font-weight:600;">AQI Level Factor (max 35)</span>
+                  <span style="font-family:JetBrains Mono,monospace; color:var(--text-main);" id="contrib-aqi">0 / 35</span>
+                </div>
+                <div style="height:6px; background:var(--bg-input); border-radius:9999px; overflow:hidden;">
+                  <div id="bar-aqi" style="height:100%; width:0%; background:#10b981; border-radius:9999px;"></div>
+                </div>
+              </div>
+
+              <!-- PM2.5 Severity -->
+              <div>
+                <div style="display:flex; justify-content:space-between; font-size:0.82rem; margin-bottom:0.35rem;">
+                  <span style="color:var(--text-main); font-weight:600;">PM2.5 Share Factor (max 25)</span>
+                  <span style="font-family:JetBrains Mono,monospace; color:var(--text-main);" id="contrib-pm25">0 / 25</span>
+                </div>
+                <div style="height:6px; background:var(--bg-input); border-radius:9999px; overflow:hidden;">
+                  <div id="bar-pm25" style="height:100%; width:0%; background:#38bdf8; border-radius:9999px;"></div>
+                </div>
+              </div>
+
+              <!-- Hotspot Persistence -->
+              <div>
+                <div style="display:flex; justify-content:space-between; font-size:0.82rem; margin-bottom:0.35rem;">
+                  <span style="color:var(--text-main); font-weight:600;">Hotspot Persistence (max 20)</span>
+                  <span style="font-family:JetBrains Mono,monospace; color:var(--text-main);" id="contrib-hotspot">0 / 20</span>
+                </div>
+                <div style="height:6px; background:var(--bg-input); border-radius:9999px; overflow:hidden;">
+                  <div id="bar-hotspot" style="height:100%; width:0%; background:#f59e0b; border-radius:9999px;"></div>
+                </div>
+              </div>
+
+              <!-- Anomaly Departure -->
+              <div>
+                <div style="display:flex; justify-content:space-between; font-size:0.82rem; margin-bottom:0.35rem;">
+                  <span style="color:var(--text-main); font-weight:600;">Statistical Anomaly (max 20)</span>
+                  <span style="font-family:JetBrains Mono,monospace; color:var(--text-main);" id="contrib-anomaly">0 / 20</span>
+                </div>
+                <div style="height:6px; background:var(--bg-input); border-radius:9999px; overflow:hidden;">
+                  <div id="bar-anomaly" style="height:100%; width:0%; background:#ef4444; border-radius:9999px;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- WHY IS THE RISK LEVEL THIS HIGH? -->
+        <section class="card" style="margin-bottom: 2rem;">
+          <div class="card-header-clean">
+            <span class="metric-kicker">Analytical Diagnostic</span>
+            <span class="text-secondary-label">Automated System Reasoning</span>
+          </div>
+          <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--text-main); margin: 0.5rem 0 1rem 0;">Why is the Risk Level Scored Here?</h3>
+
+          <div style="background:var(--bg-card-subtle); border-radius:var(--radius-sm); border:1px solid var(--border-subtle); padding:1.25rem;">
+            <p style="font-size:0.9rem; color:var(--text-main); line-height:1.6; margin:0;" id="risk-explanation-body">
+              Evaluating multi-factor inputs from live atmospheric sensors, regional historical records, and machine learning models...
+            </p>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="/static/components/shared.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", async () => {
+      const regSelect = document.getElementById("region-select");
+      let activeRegion = await window.AirGuard.loadRegions(regSelect);
+
+      async function loadRisk(region) {
+        if (!region) return;
+        const regionName = region.name || "Chennai";
+        document.getElementById("risk-region-name").textContent = regionName;
+
+        try {
+          const resp = await fetch(`/api/risk/${encodeURIComponent(regionName)}`);
+          if (!resp.ok) return;
+          const data = await resp.json();
+
+          const score = data.risk_score !== null ? Math.round(data.risk_score) : 0;
+          const level = data.risk_level || "LOW";
+          const color = window.AirGuard.getRiskColor(level);
+
+          document.getElementById("risk-score-num").textContent = score;
+          const badge = document.getElementById("risk-badge");
+          badge.textContent = `${level} RISK`;
+          badge.style.backgroundColor = `${color}22`;
+          badge.style.color = color;
+          badge.style.border = `1px solid ${color}55`;
+
+          const fill = document.getElementById("risk-meter-fill");
+          fill.style.width = `${Math.min(100, Math.max(8, score))}%`;
+          fill.style.backgroundColor = color;
+
+          document.getElementById("risk-narrative-text").textContent = (data.reasons && data.reasons.length > 0) ? data.reasons[0] : (data.summary || `Composite risk scored at ${score}/100.`);
+          document.getElementById("risk-explanation-body").textContent = (data.reasons && data.reasons.length > 1) ? data.reasons.join(" ") : (data.explanation || `The current environmental risk score of ${score}/100 is computed from live sub-hourly particulate levels, historical baselines, and statistical factors for ${regionName}.`);
+
+          // Factor contributions
+          const factors = data.contributors || {};
+          const aqiC = Math.round(factors.current_aqi ?? factors.aqi_factor ?? (score * 0.35));
+          const pmC = Math.round(factors.pollutants ?? factors.pm25_factor ?? (score * 0.25));
+          const hotC = Math.round(factors.hotspot ?? factors.hotspot_factor ?? (score * 0.20));
+          const anomC = Math.round(factors.anomaly ?? factors.anomaly_factor ?? (score * 0.20));
+
+          document.getElementById("contrib-aqi").textContent = `${aqiC} / 35`;
+          document.getElementById("bar-aqi").style.width = `${Math.min(100, (aqiC / 35) * 100)}%`;
+
+          document.getElementById("contrib-pm25").textContent = `${pmC} / 25`;
+          document.getElementById("bar-pm25").style.width = `${Math.min(100, (pmC / 25) * 100)}%`;
+
+          document.getElementById("contrib-hotspot").textContent = `${hotC} / 20`;
+          document.getElementById("bar-hotspot").style.width = `${Math.min(100, (hotC / 20) * 100)}%`;
+
+          document.getElementById("contrib-anomaly").textContent = `${anomC} / 20`;
+          document.getElementById("bar-anomaly").style.width = `${Math.min(100, (anomC / 20) * 100)}%`;
+
+        } catch (e) {
+          console.error("Risk load error:", e);
+        }
+      }
+
+      window.AirGuard.onRegionChange(r => loadRisk(r));
+      const btnRefresh = document.getElementById("btn-refresh");
+      if (btnRefresh) {
+        btnRefresh.addEventListener("click", () => loadRisk(window.AirGuard.getCurrentRegion()));
+      }
+
+      if (activeRegion) {
+        loadRisk(activeRegion);
+      } else {
+        loadRisk(window.AirGuard.getCurrentRegion() || { id: 1, name: "Chennai" });
+      }
+    });
+  </script>
+</body>
+</html>

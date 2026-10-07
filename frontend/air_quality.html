@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AirGuard AI — Air Quality Deep-Dive</title>
+  <meta name="description" content="Dedicated Air Quality Intelligence: Real-time particulate and gaseous pollutant breakdowns, standards comparison, and dominant factor analysis.">
+
+  <!-- Google Fonts: Inter & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="/static/styles/index.css">
+</head>
+<body>
+
+  <div class="app-shell">
+
+    <!-- SIDEBAR -->
+    <aside class="app-sidebar" id="app-sidebar" aria-label="Main Navigation">
+      <div class="sidebar-header">
+        <a href="/" class="sidebar-brand">
+          <div class="sidebar-brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/>
+            </svg>
+          </div>
+          <div class="sidebar-brand-text">
+            <span class="brand-title">AIRGUARD AI</span>
+            <span class="brand-subtitle">Environmental Intel</span>
+          </div>
+        </a>
+        <button id="sidebar-close-btn" class="sidebar-close-btn" aria-label="Close sidebar">✕</button>
+      </div>
+
+      <div class="sidebar-nav-container">
+        <div class="nav-group">
+          <div class="nav-group-title">Core Telemetry</div>
+          <a href="/dashboard" class="nav-link">
+            <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg></span>
+            <span class="nav-text">Dashboard</span>
+          </a>
+          <a href="/air-quality" class="nav-link active">
+            <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m4.93 4.93 4.24 4.24"/><path d="m14.83 9.17 4.24-4.24"/></svg></span>
+            <span class="nav-text">Air Quality</span>
+          </a>
+          <a href="/predictions" class="nav-link">
+            <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m22 7-8.5 8.5-5-5L2 17"/><path d="M16 7h6v6"/></svg></span>
+            <span class="nav-text">Predictions</span>
+          </a>
+          <a href="/history" class="nav-link">
+            <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>
+            <span class="nav-text">Historical Analysis</span>
+          </a>
+        </div>
+
+        <div class="nav-group">
+          <div class="nav-group-title">Spatial & Analytics</div>
+          <a href="/hotspots" class="nav-link">
+            <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2c.5 3 2.5 4.5 4 6.5 1.5 2 2 4.5 1 7.5-1 3-3.5 5-6 5s-6-2.5-6-5.5c0-3 2-5 3.5-7 .5-.7 1-1.5 1.5-2.5.5-1 1-2.5 2-4z"/></svg></span>
+            <span class="nav-text">Hotspots</span>
+          </a>
+          <a href="/anomalies" class="nav-link">
+            <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></span>
+            <span class="nav-text">Anomalies</span>
+          </a>
+          <a href="/risk" class="nav-link">
+            <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>
+            <span class="nav-text">Risk Intelligence</span>
+          </a>
+          <a href="/recommendations" class="nav-link">
+            <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></span>
+            <span class="nav-text">Recommendations</span>
+          </a>
+        </div>
+
+        <div class="nav-group">
+          <div class="nav-group-title">Operations & Geospatial</div>
+          <a href="/environmental-insights" class="nav-link">
+            <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></span>
+            <span class="nav-text">Environmental Insights</span>
+          </a>
+          <a href="/alerts" class="nav-link">
+            <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg></span>
+            <span class="nav-text">Alerts</span>
+          </a>
+          <a href="/map" class="nav-link">
+            <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" x2="9" y1="3" y2="18"/><line x1="15" x2="15" y1="6" y2="21"/></svg></span>
+            <span class="nav-text">Air Quality Map</span>
+          </a>
+          <a href="/settings" class="nav-link">
+            <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg></span>
+            <span class="nav-text">Settings</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="system-status-indicator">
+          <span class="status-indicator-dot good"></span>
+          <span class="status-text">Production Operational</span>
+        </div>
+      </div>
+    </aside>
+
+    <div id="sidebar-overlay" class="sidebar-overlay"></div>
+
+    <!-- MAIN APP CANVAS -->
+    <div class="app-main">
+
+      <!-- TOPBAR -->
+      <header class="app-topbar">
+        <div class="topbar-left">
+          <button id="mobile-menu-trigger" class="mobile-menu-btn" aria-label="Toggle navigation">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+          </button>
+          <div class="region-picker-group">
+            <select id="region-select" class="select-region" aria-label="Select Region">
+              <option value="1">Chennai, India</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="topbar-right">
+          <div class="status-pill active" id="live-status-pill">
+            <span class="pulse-indicator"></span>
+            <span>Live Telemetry</span>
+          </div>
+          <div class="header-timestamp-box">
+            <span class="text-secondary-label">Updated</span>
+            <span id="header-last-updated" class="timestamp-val">Just now</span>
+          </div>
+          <button id="btn-refresh" class="btn-ghost btn-sm" title="Refresh Live Data" aria-label="Refresh Data">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 21h5v-5"/></svg>
+            <span>Refresh</span>
+          </button>
+          <a href="/alerts" class="btn-ghost btn-sm" title="Alerts" style="text-decoration:none;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+          </a>
+          <a href="/settings" class="btn-ghost btn-sm" title="Settings" style="text-decoration:none;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          </a>
+        </div>
+      </header>
+
+      <!-- CANVAS CONTENT -->
+      <main class="content-canvas">
+
+        <!-- Page Header -->
+        <div class="page-hero-header">
+          <div>
+            <span class="section-kicker">Atmospheric Telemetry</span>
+            <h1 class="page-title-main">Air Quality Deep-Dive</h1>
+            <p class="page-subtitle-main">Detailed chemical concentrations, health benchmarks, and dominant pollutant analysis for <span id="aq-region-name" style="color:var(--text-main); font-weight:700;">Chennai</span>.</p>
+          </div>
+        </div>
+
+        <!-- HERO AQI VISUALIZATION & DOMINANT POLLUTANT ANALYSIS -->
+        <div style="display: grid; grid-template-columns: 1.1fr 1fr; gap: 1.25rem; margin-bottom: 1.5rem;">
+          <!-- AQI Card -->
+          <div class="card" style="display:flex; flex-direction:column; justify-content:space-between;">
+            <div>
+              <div class="card-header-clean">
+                <span class="metric-kicker">Overall Air Quality Index</span>
+                <span id="aq-badge" class="badge-status-pill badge-good">Good</span>
+              </div>
+              <div style="display:flex; align-items:baseline; gap:0.75rem; margin: 1rem 0;">
+                <span id="aq-val" style="font-size: 4rem; font-weight:800; color:var(--text-main); line-height:1;">—</span>
+                <span style="font-size: 1.1rem; color: var(--text-muted); font-weight:600;">AQI</span>
+              </div>
+              <div id="aq-narrative" style="font-size: 0.95rem; color: var(--text-main); line-height: 1.5; margin-bottom: 1rem;">
+                Air quality is acceptable for outdoor activity and public exposure.
+              </div>
+            </div>
+            <div style="border-top: 1px solid var(--border-subtle); padding-top: 0.75rem; display:flex; justify-content:space-between; font-size:0.78rem; color:var(--text-muted);">
+              <span id="aq-time">Observed: Just now</span>
+              <span>Indian NAAQS Scale (CPCB)</span>
+            </div>
+          </div>
+
+          <!-- Dominant Pollutant Spotlight -->
+          <div class="card" style="display:flex; flex-direction:column; justify-content:space-between;">
+            <div>
+              <div class="card-header-clean">
+                <span class="metric-kicker">Dominant Factor</span>
+                <span class="badge-status-pill badge-good" id="dominant-badge">Active</span>
+              </div>
+              <h3 style="font-size: 1.25rem; font-weight: 700; color: var(--text-main); margin: 0.5rem 0;" id="dominant-title">
+                What's Affecting the Air?
+              </h3>
+              <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.6;" id="dominant-explanation">
+                Analyzing individual pollutant concentration ratios against standard National Ambient Air Quality Standards (NAAQS) thresholds...
+              </p>
+            </div>
+            <div style="background: var(--bg-card-subtle); border-radius: var(--radius-sm); padding: 0.85rem; font-size: 0.82rem; color: var(--text-muted);" id="dominant-impact">
+              Health Impact: Minimal respiratory irritation under baseline conditions.
+            </div>
+          </div>
+        </div>
+
+        <!-- DETAILED POLLUTANT CARDS (6 PARTICULATES & GASES) -->
+        <section style="margin-bottom: 1.5rem;">
+          <div class="section-header-compact">
+            <div>
+              <span class="section-kicker">Continuous Telemetry</span>
+              <h2 class="section-title-text" style="font-size: 1.15rem;">Pollutant Breakdown vs National Standards</h2>
+            </div>
+          </div>
+
+          <div class="metrics-grid">
+            <!-- PM2.5 -->
+            <div class="metric-cell">
+              <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                <span class="metric-cell-label">PM2.5</span>
+                <span class="badge-status-pill badge-good" id="badge-pm25">Normal</span>
+              </div>
+              <div class="metric-cell-value-row">
+                <span class="metric-cell-num" id="val-pm25">—</span>
+                <span class="metric-cell-unit">µg/m³</span>
+              </div>
+              <div style="font-size:0.75rem; color:var(--text-muted); margin-top:0.35rem;">
+                Standard: 60 µg/m³ (24h)
+              </div>
+            </div>
+
+            <!-- PM10 -->
+            <div class="metric-cell">
+              <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                <span class="metric-cell-label">PM10</span>
+                <span class="badge-status-pill badge-good" id="badge-pm10">Normal</span>
+              </div>
+              <div class="metric-cell-value-row">
+                <span class="metric-cell-num" id="val-pm10">—</span>
+                <span class="metric-cell-unit">µg/m³</span>
+              </div>
+              <div style="font-size:0.75rem; color:var(--text-muted); margin-top:0.35rem;">
+                Standard: 100 µg/m³ (24h)
+              </div>
+            </div>
+
+            <!-- NO2 -->
+            <div class="metric-cell">
+              <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                <span class="metric-cell-label">NO₂</span>
+                <span class="badge-status-pill badge-good" id="badge-no2">Normal</span>
+              </div>
+              <div class="metric-cell-value-row">
+                <span class="metric-cell-num" id="val-no2">—</span>
+                <span class="metric-cell-unit">µg/m³</span>
+              </div>
+              <div style="font-size:0.75rem; color:var(--text-muted); margin-top:0.35rem;">
+                Standard: 80 µg/m³ (24h)
+              </div>
+            </div>
+
+            <!-- CO -->
+            <div class="metric-cell">
+              <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                <span class="metric-cell-label">CO</span>
+                <span class="badge-status-pill badge-good" id="badge-co">Normal</span>
+              </div>
+              <div class="metric-cell-value-row">
+                <span class="metric-cell-num" id="val-co">—</span>
+                <span class="metric-cell-unit">µg/m³</span>
+              </div>
+              <div style="font-size:0.75rem; color:var(--text-muted); margin-top:0.35rem;">
+                Standard: 2000 µg/m³ (8h)
+              </div>
+            </div>
+
+            <!-- SO2 -->
+            <div class="metric-cell">
+              <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                <span class="metric-cell-label">SO₂</span>
+                <span class="badge-status-pill badge-good" id="badge-so2">Normal</span>
+              </div>
+              <div class="metric-cell-value-row">
+                <span class="metric-cell-num" id="val-so2">—</span>
+                <span class="metric-cell-unit">µg/m³</span>
+              </div>
+              <div style="font-size:0.75rem; color:var(--text-muted); margin-top:0.35rem;">
+                Standard: 80 µg/m³ (24h)
+              </div>
+            </div>
+
+            <!-- O3 -->
+            <div class="metric-cell">
+              <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                <span class="metric-cell-label">O₃</span>
+                <span class="badge-status-pill badge-good" id="badge-o3">Normal</span>
+              </div>
+              <div class="metric-cell-value-row">
+                <span class="metric-cell-num" id="val-o3">—</span>
+                <span class="metric-cell-unit">µg/m³</span>
+              </div>
+              <div style="font-size:0.75rem; color:var(--text-muted); margin-top:0.35rem;">
+                Standard: 100 µg/m³ (8h)
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- INTERACTIVE POLLUTANT TREND CHART WITH SELECTOR -->
+        <section class="card" style="margin-bottom: 2rem;">
+          <div class="card-header-clean">
+            <div>
+              <span class="metric-kicker">Interactive Visualizer</span>
+              <h3 style="font-size: 1.05rem; font-weight: 700; color: var(--text-main);">Pollutant Concentration History</h3>
+            </div>
+            <div style="display:flex; align-items:center; gap:0.75rem;">
+              <select id="aq-metric-select" class="select-region" style="height:34px; padding:0 0.75rem; font-size:0.82rem;">
+                <option value="pm25">PM2.5 (Fine Particulates)</option>
+                <option value="pm10">PM10 (Coarse Particulates)</option>
+                <option value="no2">NO₂ (Nitrogen Dioxide)</option>
+                <option value="co">CO (Carbon Monoxide)</option>
+                <option value="so2">SO₂ (Sulfur Dioxide)</option>
+                <option value="o3">O₃ (Ground Ozone)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="chart-container-clean" style="height: 240px; margin-top: 1rem;">
+            <svg id="aq-chart-svg" class="chart-svg" viewBox="0 0 800 240" preserveAspectRatio="none"></svg>
+          </div>
+
+          <div style="display:flex; justify-content:space-between; margin-top: 1rem; font-size:0.78rem; color:var(--text-muted);">
+            <span id="aq-chart-standard-note">Reference Standard: 60 µg/m³ (NAAQS 24-hour limit)</span>
+            <span>Historical Causal Ingestion &bull; SQLite</span>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="/static/components/shared.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", async () => {
+      const regSelect = document.getElementById("region-select");
+      let activeRegion = await window.AirGuard.loadRegions(regSelect);
+      let observationsCache = [];
+
+      const STANDARDS = {
+        pm25: { name: "PM2.5", standard: 60, unit: "µg/m³", desc: "Fine particulate matter from combustion, vehicles, and atmospheric reactions." },
+        pm10: { name: "PM10", standard: 100, unit: "µg/m³", desc: "Coarse inhalable particles from road dust, construction, and pollen." },
+        no2: { name: "NO₂", standard: 80, unit: "µg/m³", desc: "Nitrogen dioxide generated primarily by motor vehicles and power plants." },
+        co: { name: "CO", standard: 2000, unit: "µg/m³", desc: "Carbon monoxide emitted by incomplete combustion in engines and industrial boilers." },
+        so2: { name: "SO₂", standard: 80, unit: "µg/m³", desc: "Sulfur dioxide produced by burning coal and oil at industrial facilities." },
+        o3: { name: "O₃", standard: 100, unit: "µg/m³", desc: "Secondary pollutant formed when sunlight reacts with NOx and volatile compounds." }
+      };
+
+      async function loadAirQuality(region) {
+        const r = region || window.AirGuard.getCurrentRegion() || { id: 1, name: "Chennai" };
+        const regionName = r.name || "Chennai";
+        const regionId = r.id || 1;
+        document.getElementById("aq-region-name").textContent = regionName;
+
+        try {
+          const resp = await fetch(`/api/air-quality/${encodeURIComponent(regionName)}`);
+          if (resp.ok) {
+            const raw = await resp.json();
+            const data = (raw && raw.data) ? raw.data : (raw || {});
+            const aqi = (data.aqi !== null && data.aqi !== undefined) ? Math.round(data.aqi) : "—";
+            document.getElementById("aq-val").textContent = aqi;
+
+            const cat = window.AirGuard.getAqiCategory(data.aqi);
+            const aqiBadge = document.getElementById("aq-badge");
+            aqiBadge.textContent = cat.label;
+            aqiBadge.style.backgroundColor = `${cat.color}22`;
+            aqiBadge.style.color = cat.color;
+            aqiBadge.style.border = `1px solid ${cat.color}55`;
+
+            if (data.timestamp) {
+              document.getElementById("aq-time").textContent = `Observed: ${window.AirGuard.formatShortTime(data.timestamp)}`;
+              document.getElementById("header-last-updated").textContent = window.AirGuard.formatShortTime(data.timestamp);
+            }
+
+            const pol = data.pollutants || {};
+            const p25 = data.pm25 ?? pol.pm2_5 ?? 0;
+            const p10 = data.pm10 ?? pol.pm10 ?? 0;
+            const no2 = data.no2 ?? pol.nitrogen_dioxide ?? 0;
+            const co = data.co ?? pol.carbon_monoxide ?? 0;
+            const so2 = data.so2 ?? pol.sulphur_dioxide ?? 0;
+            const o3 = data.o3 ?? pol.ozone ?? 0;
+
+            document.getElementById("val-pm25").textContent = (p25 !== undefined && p25 !== null) ? Number(p25).toFixed(1) : "—";
+            document.getElementById("val-pm10").textContent = (p10 !== undefined && p10 !== null) ? Number(p10).toFixed(1) : "—";
+            document.getElementById("val-no2").textContent = (no2 !== undefined && no2 !== null) ? Number(no2).toFixed(1) : "—";
+            document.getElementById("val-co").textContent = (co !== undefined && co !== null) ? Number(co).toFixed(1) : "—";
+            document.getElementById("val-so2").textContent = (so2 !== undefined && so2 !== null) ? Number(so2).toFixed(1) : "—";
+            document.getElementById("val-o3").textContent = (o3 !== undefined && o3 !== null) ? Number(o3).toFixed(1) : "—";
+
+            const setBadge = (id, val, std) => {
+              const el = document.getElementById(id);
+              if (!el) return;
+              if (val > std) {
+                el.textContent = "Elevated";
+                el.className = "badge-status-pill badge-warning";
+              } else {
+                el.textContent = "Normal";
+                el.className = "badge-status-pill badge-good";
+              }
+            };
+            setBadge("badge-pm25", p25, 60);
+            setBadge("badge-pm10", p10, 100);
+            setBadge("badge-no2", no2, 80);
+            setBadge("badge-co", co, 2000);
+            setBadge("badge-so2", so2, 80);
+            setBadge("badge-o3", o3, 100);
+
+            // Determine dominant pollutant
+            const ratios = [
+              { key: "PM2.5", val: p25, std: 60, ratio: p25 / 60 },
+              { key: "PM10", val: p10, std: 100, ratio: p10 / 100 },
+              { key: "NO₂", val: no2, std: 80, ratio: no2 / 80 },
+              { key: "CO", val: co, std: 2000, ratio: co / 2000 },
+              { key: "SO₂", val: so2, std: 80, ratio: so2 / 80 },
+              { key: "O₃", val: o3, std: 100, ratio: o3 / 100 }
+            ];
+            ratios.sort((a, b) => b.ratio - a.ratio);
+            const dom = ratios[0];
+
+            document.getElementById("dominant-title").textContent = `${dom.key} is the Dominant Factor (${Math.round(dom.ratio * 100)}% of standard)`;
+            document.getElementById("dominant-explanation").textContent = `Concentration is currently ${dom.val.toFixed(1)} µg/m³ against the national guideline threshold of ${dom.std} µg/m³. Elevated concentrations of ${dom.key} are the primary driver of the current ${cat.label} classification.`;
+            document.getElementById("dominant-impact").textContent = dom.ratio > 1.0
+              ? `Advisory: Concentrations exceed permissible standards. Prolonged outdoor exposure can increase cardiovascular and pulmonary stress.`
+              : `Observation: All monitored parameters remain within safe regulatory limits for the general population.`;
+          }
+
+          // Historical Observations for chart
+          const histResp = await fetch(`/api/history/${regionId}?hours=24`);
+          if (histResp.ok) {
+            const histData = await histResp.json();
+            observationsCache = histData.observations || [];
+            renderPollutantChart(document.getElementById("aq-metric-select").value);
+          }
+
+        } catch (e) {
+          console.error("Air quality loading error:", e);
+        }
+      }
+
+      function renderPollutantChart(metricKey) {
+        const svg = document.getElementById("aq-chart-svg");
+        if (!svg) return;
+        svg.innerHTML = "";
+
+        const meta = STANDARDS[metricKey] || STANDARDS.pm25;
+        document.getElementById("aq-chart-standard-note").textContent = `Reference Standard: ${meta.standard} ${meta.unit} (NAAQS Regulatory Limit)`;
+
+        // Extract points
+        const points = [];
+        observationsCache.forEach(o => {
+          let v = null;
+          if (metricKey === "pm25") v = o.pm25 ?? o.pm2_5;
+          else if (metricKey === "pm10") v = o.pm10;
+          else if (metricKey === "no2") v = o.no2 ?? o.nitrogen_dioxide;
+          else if (metricKey === "co") v = o.co ?? o.carbon_monoxide;
+          else if (metricKey === "so2") v = o.so2 ?? o.sulphur_dioxide;
+          else if (metricKey === "o3") v = o.o3 ?? o.ozone;
+
+          if (v !== null && v !== undefined && !isNaN(v)) {
+            points.push({ val: Number(v), time: o.timestamp });
+          }
+        });
+
+        if (points.length < 2) {
+          const txt = document.createElementNS("http://www.w3.org/2000/svg", "text");
+          txt.setAttribute("x", "400");
+          txt.setAttribute("y", "120");
+          txt.setAttribute("text-anchor", "middle");
+          txt.setAttribute("fill", "#64748b");
+          txt.setAttribute("font-size", "12");
+          txt.textContent = `Awaiting additional historical observations in SQLite for ${meta.name}`;
+          svg.appendChild(txt);
+          return;
+        }
+
+        const width = 800;
+        const height = 240;
+        const pad = { top: 20, right: 30, bottom: 35, left: 45 };
+        const w = width - pad.left - pad.right;
+        const h = height - pad.top - pad.bottom;
+
+        const vals = points.map(p => p.val);
+        vals.push(meta.standard);
+        const min = Math.max(0, Math.floor(Math.min(...vals) * 0.85));
+        const max = Math.ceil(Math.max(...vals) * 1.15) || 100;
+
+        const getX = (i) => pad.left + (i / (points.length - 1)) * w;
+        const getY = (v) => pad.top + h - ((v - min) / (max - min)) * h;
+
+        // Regulatory standard dashed line
+        const stdY = getY(meta.standard);
+        const stdLine = document.createElementNS("http://www.w3.org/2000/svg", "line");
+        stdLine.setAttribute("x1", pad.left);
+        stdLine.setAttribute("y1", stdY);
+        stdLine.setAttribute("x2", width - pad.right);
+        stdLine.setAttribute("y2", stdY);
+        stdLine.setAttribute("stroke", "#f59e0b");
+        stdLine.setAttribute("stroke-width", "1.5");
+        stdLine.setAttribute("stroke-dasharray", "4,4");
+        svg.appendChild(stdLine);
+
+        // Standard label
+        const stdLbl = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        stdLbl.setAttribute("x", width - pad.right);
+        stdLbl.setAttribute("y", stdY - 5);
+        stdLbl.setAttribute("text-anchor", "end");
+        stdLbl.setAttribute("fill", "#f59e0b");
+        stdLbl.setAttribute("font-size", "10px");
+        stdLbl.textContent = `NAAQS Standard (${meta.standard} ${meta.unit})`;
+        svg.appendChild(stdLbl);
+
+        // Area & Line
+        let dArea = `M ${getX(0)} ${getY(points[0].val)}`;
+        let dLine = `M ${getX(0)} ${getY(points[0].val)}`;
+        for (let i = 1; i < points.length; i++) {
+          const pt = ` L ${getX(i)} ${getY(points[i].val)}`;
+          dArea += pt;
+          dLine += pt;
+        }
+        dArea += ` L ${getX(points.length - 1)} ${pad.top + h} L ${getX(0)} ${pad.top + h} Z`;
+
+        const areaPath = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        areaPath.setAttribute("d", dArea);
+        areaPath.setAttribute("fill", "rgba(56, 189, 248, 0.12)");
+        svg.appendChild(areaPath);
+
+        const linePath = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        linePath.setAttribute("d", dLine);
+        linePath.setAttribute("fill", "none");
+        linePath.setAttribute("stroke", "#38bdf8");
+        linePath.setAttribute("stroke-width", "2.5");
+        svg.appendChild(linePath);
+      }
+
+      document.getElementById("aq-metric-select").addEventListener("change", (e) => {
+        renderPollutantChart(e.target.value);
+      });
+
+      window.AirGuard.onRegionChange(r => loadAirQuality(r));
+      const btnRefresh = document.getElementById("btn-refresh");
+      if (btnRefresh) {
+        btnRefresh.addEventListener("click", () => loadAirQuality(window.AirGuard.getCurrentRegion()));
+      }
+
+      if (activeRegion) {
+        loadAirQuality(activeRegion);
+      } else {
+        loadAirQuality(window.AirGuard.getCurrentRegion() || { id: 1, name: "Chennai" });
+      }
+    });
+  </script>
+</body>
+</html>

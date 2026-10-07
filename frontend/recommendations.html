@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AirGuard AI — Smart Recommendations &amp; Health Advisories</title>
+  <meta name="description" content="Dedicated Environmental Advisories: Actionable precautions tailored for health, outdoor sports, travel, ventilation, and sensitive groups.">
+
+  <!-- Google Fonts: Inter & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="/static/styles/index.css">
+</head>
+<body>
+
+  <div class="app-shell">
+
+    <!-- SIDEBAR -->
+    <aside class="app-sidebar" id="app-sidebar" aria-label="Main Navigation">
+      <div class="sidebar-header">
+        <a href="/" class="sidebar-brand">
+          <div class="sidebar-brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/>
+            </svg>
+          </div>
+          <div class="sidebar-brand-text">
+            <span class="brand-title">AIRGUARD AI</span>
+            <span class="brand-subtitle">Environmental Intel</span>
+          </div>
+        </a>
+        <button id="sidebar-close-btn" class="sidebar-close-btn" aria-label="Close sidebar">✕</button>
+      </div>
+
+      <div class="sidebar-nav-container">
+        <div class="nav-group">
+          <div class="nav-group-title">Core Telemetry</div>
+          <a href="/dashboard" class="nav-link">
+            <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg></span>
+            <span class="nav-text">Dashboard</span>
+          </a>
+          <a href="/air-quality" class="nav-link">
+            <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m4.93 4.93 4.24 4.24"/><path d="m14.83 9.17 4.24-4.24"/></svg></span>
+            <span class="nav-text">Air Quality</span>
+          </a>
+          <a href="/predictions" class="nav-link">
+            <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m22 7-8.5 8.5-5-5L2 17"/><path d="M16 7h6v6"/></svg></span>
+            <span class="nav-text">Predictions</span>
+          </a>
+          <a href="/history" class="nav-link">
+            <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>
+            <span class="nav-text">Historical Analysis</span>
+          </a>
+        </div>
+
+        <div class="nav-group">
+          <div class="nav-group-title">Spatial & Analytics</div>
+          <a href="/hotspots" class="nav-link">
+            <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2c.5 3 2.5 4.5 4 6.5 1.5 2 2 4.5 1 7.5-1 3-3.5 5-6 5s-6-2.5-6-5.5c0-3 2-5 3.5-7 .5-.7 1-1.5 1.5-2.5.5-1 1-2.5 2-4z"/></svg></span>
+            <span class="nav-text">Hotspots</span>
+          </a>
+          <a href="/anomalies" class="nav-link">
+            <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></span>
+            <span class="nav-text">Anomalies</span>
+          </a>
+          <a href="/risk" class="nav-link">
+            <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>
+            <span class="nav-text">Risk Intelligence</span>
+          </a>
+          <a href="/recommendations" class="nav-link active">
+            <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></span>
+            <span class="nav-text">Recommendations</span>
+          </a>
+        </div>
+
+        <div class="nav-group">
+          <div class="nav-group-title">Operations & Geospatial</div>
+          <a href="/environmental-insights" class="nav-link">
+            <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></span>
+            <span class="nav-text">Environmental Insights</span>
+          </a>
+          <a href="/alerts" class="nav-link">
+            <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg></span>
+            <span class="nav-text">Alerts</span>
+          </a>
+          <a href="/map" class="nav-link">
+            <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" x2="9" y1="3" y2="18"/><line x1="15" x2="15" y1="6" y2="21"/></svg></span>
+            <span class="nav-text">Air Quality Map</span>
+          </a>
+          <a href="/settings" class="nav-link">
+            <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg></span>
+            <span class="nav-text">Settings</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="system-status-indicator">
+          <span class="status-indicator-dot good"></span>
+          <span class="status-text">Production Operational</span>
+        </div>
+      </div>
+    </aside>
+
+    <div id="sidebar-overlay" class="sidebar-overlay"></div>
+
+    <!-- MAIN APP CANVAS -->
+    <div class="app-main">
+
+      <!-- TOPBAR -->
+      <header class="app-topbar">
+        <div class="topbar-left">
+          <button id="mobile-menu-trigger" class="mobile-menu-btn" aria-label="Toggle navigation">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+          </button>
+          <div class="region-picker-group">
+            <select id="region-select" class="select-region" aria-label="Select Region">
+              <option value="1">Chennai, India</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="topbar-right">
+          <div class="status-pill active" id="live-status-pill">
+            <span class="pulse-indicator"></span>
+            <span>Advisory Engine Active</span>
+          </div>
+          <div class="header-timestamp-box">
+            <span class="text-secondary-label">Updated</span>
+            <span id="header-last-updated" class="timestamp-val">Just now</span>
+          </div>
+          <button id="btn-refresh" class="btn-ghost btn-sm" title="Refresh Live Data" aria-label="Refresh Data">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 21h5v-5"/></svg>
+            <span>Refresh</span>
+          </button>
+          <a href="/alerts" class="btn-ghost btn-sm" title="Alerts" style="text-decoration:none;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+          </a>
+          <a href="/settings" class="btn-ghost btn-sm" title="Settings" style="text-decoration:none;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          </a>
+        </div>
+      </header>
+
+      <!-- CANVAS CONTENT -->
+      <main class="content-canvas">
+
+        <!-- Page Header -->
+        <div class="page-hero-header">
+          <div>
+            <span class="section-kicker">Operational Guidance</span>
+            <h1 class="page-title-main">Smart Recommendations</h1>
+            <p class="page-subtitle-main">Contextual health, outdoor, sensitive group, and travel precautions generated from real-time environmental conditions for <span id="rec-region-name" style="color:var(--text-main); font-weight:700;">Chennai</span>.</p>
+          </div>
+        </div>
+
+        <!-- CATEGORY FILTER TABS -->
+        <div style="display:flex; gap:0.5rem; margin-bottom:1.5rem; flex-wrap:wrap;">
+          <button class="btn-ghost btn-sm active" id="tab-all" onclick="filterCategory('ALL')">All Categories</button>
+          <button class="btn-ghost btn-sm" id="tab-health" onclick="filterCategory('HEALTH')">Health</button>
+          <button class="btn-ghost btn-sm" id="tab-outdoor" onclick="filterCategory('OUTDOOR')">Outdoor Activity</button>
+          <button class="btn-ghost btn-sm" id="tab-travel" onclick="filterCategory('TRAVEL')">Travel</button>
+          <button class="btn-ghost btn-sm" id="tab-sensitive" onclick="filterCategory('SENSITIVE_GROUPS')">Sensitive Groups</button>
+          <button class="btn-ghost btn-sm" id="tab-general" onclick="filterCategory('GENERAL')">General</button>
+        </div>
+
+        <!-- RECOMMENDATIONS CONTAINER -->
+        <div id="recs-grid" style="display:grid; grid-template-columns: repeat(2, 1fr); gap:1.25rem; margin-bottom: 2rem;">
+          <div style="grid-column: span 2; padding:3rem; text-align:center; color:var(--text-muted); font-size:0.9rem;">
+            Loading smart recommendations...
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="/static/components/shared.js"></script>
+  <script>
+    let currentRecs = [];
+    let activeCategory = "ALL";
+
+    function filterCategory(cat) {
+      activeCategory = cat;
+      document.querySelectorAll("[id^='tab-']").forEach(b => b.classList.remove("active"));
+      const btn = document.getElementById(`tab-${cat.toLowerCase().replace('_', '')}`) || document.getElementById("tab-all");
+      if (btn) btn.classList.add("active");
+      renderRecommendations();
+    }
+
+    function renderRecommendations() {
+      const container = document.getElementById("recs-grid");
+      container.innerHTML = "";
+
+      let filtered = currentRecs;
+      if (activeCategory !== "ALL") {
+        filtered = currentRecs.filter(r => (r.category || "").toUpperCase().includes(activeCategory));
+      }
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div style="grid-column: span 2; padding:3rem; text-align:center; background:var(--bg-card); border-radius:var(--radius-md); border:1px solid var(--border-subtle);">
+            <div style="color:var(--accent-emerald); font-weight:700; margin-bottom:0.35rem;">No Specific Advisories Required</div>
+            <p style="font-size:0.85rem; color:var(--text-muted); margin:0;">Recommendations will appear dynamically when live atmospheric telemetry exceeds baseline thresholds.</p>
+          </div>
+        `;
+        return;
+      }
+
+      filtered.forEach(rec => {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.style.display = "flex";
+        card.style.flexDirection = "column";
+        card.style.justifyContent = "space-between";
+
+        const priority = (rec.priority || "LOW").toUpperCase();
+        const pClass = priority === "HIGH" ? "badge-critical" : (priority === "MEDIUM" ? "badge-high" : "badge-good");
+
+        card.innerHTML = `
+          <div>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem;">
+              <span class="badge-status-pill ${pClass}">${priority} PRIORITY</span>
+              <span style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase; font-weight:700;">${rec.category || 'General'}</span>
+            </div>
+            <h3 style="font-size:1.1rem; font-weight:700; color:var(--text-main); margin:0.35rem 0 0.5rem 0;">${rec.title}</h3>
+            
+            <div style="margin: 0.75rem 0;">
+              <div style="font-size:0.72rem; font-weight:700; text-transform:uppercase; color:var(--accent-emerald); margin-bottom:0.25rem;">WHAT TO DO</div>
+              <p style="font-size:0.88rem; color:var(--text-main); line-height:1.5; margin:0;">${rec.message}</p>
+            </div>
+          </div>
+          <div style="background:var(--bg-card-subtle); border-radius:var(--radius-sm); padding:0.85rem; border-left:3px solid var(--accent-emerald); margin-top:0.75rem;">
+            <span style="font-size:0.72rem; color:var(--text-muted); font-weight:700; text-transform:uppercase;">WHY</span>
+            <div style="font-size:0.82rem; color:var(--text-muted); line-height:1.45; margin-top:0.25rem;">${rec.reason}</div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    document.addEventListener("DOMContentLoaded", async () => {
+      const regSelect = document.getElementById("region-select");
+      let activeRegion = await window.AirGuard.loadRegions(regSelect);
+
+      async function loadRecommendations(region) {
+        if (!region) return;
+        const regionName = region.name || "Chennai";
+        document.getElementById("rec-region-name").textContent = regionName;
+
+        try {
+          const resp = await fetch(`/api/recommendations/${encodeURIComponent(regionName)}`);
+          if (!resp.ok) return;
+          const data = await resp.json();
+          currentRecs = data.recommendations || [];
+          renderRecommendations();
+        } catch (e) {
+          console.error("Recommendations load error:", e);
+        }
+      }
+
+      window.AirGuard.onRegionChange(r => loadRecommendations(r));
+      const btnRefresh = document.getElementById("btn-refresh");
+      if (btnRefresh) {
+        btnRefresh.addEventListener("click", () => loadRecommendations(window.AirGuard.getCurrentRegion()));
+      }
+
+      if (activeRegion) {
+        loadRecommendations(activeRegion);
+      } else {
+        loadRecommendations(window.AirGuard.getCurrentRegion() || { id: 1, name: "Chennai" });
+      }
+    });
+  </script>
+</body>
+</html>

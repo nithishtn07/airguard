@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AirGuard AI — Pollution Hotspots Intelligence</title>
+  <meta name="description" content="Dedicated Pollution Hotspots Intelligence: Multi-factor persistent pollution identification, regional rankings, and severity breakdown.">
+
+  <!-- Google Fonts: Inter & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="/static/styles/index.css">
+</head>
+<body>
+
+  <div class="app-shell">
+
+    <!-- SIDEBAR -->
+    <aside class="app-sidebar" id="app-sidebar" aria-label="Main Navigation">
+      <div class="sidebar-header">
+        <a href="/" class="sidebar-brand">
+          <div class="sidebar-brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/>
+            </svg>
+          </div>
+          <div class="sidebar-brand-text">
+            <span class="brand-title">AIRGUARD AI</span>
+            <span class="brand-subtitle">Environmental Intel</span>
+          </div>
+        </a>
+        <button id="sidebar-close-btn" class="sidebar-close-btn" aria-label="Close sidebar">✕</button>
+      </div>
+
+      <div class="sidebar-nav-container">
+        <div class="nav-group">
+          <div class="nav-group-title">Core Telemetry</div>
+          <a href="/dashboard" class="nav-link">
+            <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg></span>
+            <span class="nav-text">Dashboard</span>
+          </a>
+          <a href="/air-quality" class="nav-link">
+            <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m4.93 4.93 4.24 4.24"/><path d="m14.83 9.17 4.24-4.24"/></svg></span>
+            <span class="nav-text">Air Quality</span>
+          </a>
+          <a href="/predictions" class="nav-link">
+            <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m22 7-8.5 8.5-5-5L2 17"/><path d="M16 7h6v6"/></svg></span>
+            <span class="nav-text">Predictions</span>
+          </a>
+          <a href="/history" class="nav-link">
+            <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>
+            <span class="nav-text">Historical Analysis</span>
+          </a>
+        </div>
+
+        <div class="nav-group">
+          <div class="nav-group-title">Spatial & Analytics</div>
+          <a href="/hotspots" class="nav-link active">
+            <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2c.5 3 2.5 4.5 4 6.5 1.5 2 2 4.5 1 7.5-1 3-3.5 5-6 5s-6-2.5-6-5.5c0-3 2-5 3.5-7 .5-.7 1-1.5 1.5-2.5.5-1 1-2.5 2-4z"/></svg></span>
+            <span class="nav-text">Hotspots</span>
+          </a>
+          <a href="/anomalies" class="nav-link">
+            <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></span>
+            <span class="nav-text">Anomalies</span>
+          </a>
+          <a href="/risk" class="nav-link">
+            <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>
+            <span class="nav-text">Risk Intelligence</span>
+          </a>
+          <a href="/recommendations" class="nav-link">
+            <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></span>
+            <span class="nav-text">Recommendations</span>
+          </a>
+        </div>
+
+        <div class="nav-group">
+          <div class="nav-group-title">Operations & Geospatial</div>
+          <a href="/environmental-insights" class="nav-link">
+            <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></span>
+            <span class="nav-text">Environmental Insights</span>
+          </a>
+          <a href="/alerts" class="nav-link">
+            <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg></span>
+            <span class="nav-text">Alerts</span>
+          </a>
+          <a href="/map" class="nav-link">
+            <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" x2="9" y1="3" y2="18"/><line x1="15" x2="15" y1="6" y2="21"/></svg></span>
+            <span class="nav-text">Air Quality Map</span>
+          </a>
+          <a href="/settings" class="nav-link">
+            <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg></span>
+            <span class="nav-text">Settings</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="system-status-indicator">
+          <span class="status-indicator-dot good"></span>
+          <span class="status-text">Production Operational</span>
+        </div>
+      </div>
+    </aside>
+
+    <div id="sidebar-overlay" class="sidebar-overlay"></div>
+
+    <!-- MAIN APP CANVAS -->
+    <div class="app-main">
+
+      <!-- TOPBAR -->
+      <header class="app-topbar">
+        <div class="topbar-left">
+          <button id="mobile-menu-trigger" class="mobile-menu-btn" aria-label="Toggle navigation">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+          </button>
+          <div class="region-picker-group">
+            <select id="region-select" class="select-region" aria-label="Select Region">
+              <option value="1">Chennai, India</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="topbar-right">
+          <div class="status-pill active" id="live-status-pill">
+            <span class="pulse-indicator"></span>
+            <span>Hotspot Engine Active</span>
+          </div>
+          <div class="header-timestamp-box">
+            <span class="text-secondary-label">Updated</span>
+            <span id="header-last-updated" class="timestamp-val">Just now</span>
+          </div>
+          <button id="btn-refresh" class="btn-ghost btn-sm" title="Refresh Live Data" aria-label="Refresh Data">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 21h5v-5"/></svg>
+            <span>Refresh</span>
+          </button>
+          <a href="/alerts" class="btn-ghost btn-sm" title="Alerts" style="text-decoration:none;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+          </a>
+          <a href="/settings" class="btn-ghost btn-sm" title="Settings" style="text-decoration:none;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          </a>
+        </div>
+      </header>
+
+      <!-- CANVAS CONTENT -->
+      <main class="content-canvas">
+
+        <!-- Page Header -->
+        <div class="page-hero-header">
+          <div>
+            <span class="section-kicker">Geospatial Environmental Risk</span>
+            <h1 class="page-title-main">Pollution Hotspots</h1>
+            <p class="page-subtitle-main">Monitored Indian metropolitan regions ranked using actual multi-factor hotspot persistence calculations.</p>
+          </div>
+          <div>
+            <a href="/map" class="btn-primary btn-sm" style="text-decoration:none;">Inspect on Map &rarr;</a>
+          </div>
+        </div>
+
+        <!-- SUMMARY CARDS -->
+        <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:1.25rem; margin-bottom:1.5rem;">
+          <div class="card" style="padding:1.25rem;">
+            <span class="metric-kicker">Regions Monitored</span>
+            <div style="font-size:2.25rem; font-weight:800; color:var(--text-main); margin:0.35rem 0;" id="hotspot-count-total">5</div>
+            <span style="font-size:0.78rem; color:var(--text-muted);">Central Registry Telemetry</span>
+          </div>
+
+          <div class="card" style="padding:1.25rem;">
+            <span class="metric-kicker">Active Hotspots Flagged</span>
+            <div style="font-size:2.25rem; font-weight:800; color:#ea580c; margin:0.35rem 0;" id="hotspot-count-active">—</div>
+            <span style="font-size:0.78rem; color:var(--text-muted);">Rolling 24-Hour Persistence Window</span>
+          </div>
+
+          <div class="card" style="padding:1.25rem;">
+            <span class="metric-kicker">Top Ranked Hotspot</span>
+            <div style="font-size:1.75rem; font-weight:800; color:var(--text-main); margin:0.35rem 0;" id="hotspot-top-name">—</div>
+            <span style="font-size:0.78rem; color:var(--text-muted);" id="hotspot-top-score">Highest Composite Score</span>
+          </div>
+        </div>
+
+        <!-- RANKED HOTSPOTS TABLE -->
+        <section class="card" style="margin-bottom: 2rem;">
+          <div class="card-header-clean">
+            <div>
+              <span class="metric-kicker">Calculated Rankings</span>
+              <h3 style="font-size: 1.05rem; font-weight: 700; color: var(--text-main);">Metropolitan Hotspot Registry</h3>
+            </div>
+            <span class="text-secondary-label">Indian NAAQS Criteria</span>
+          </div>
+
+          <div class="hotspot-table-wrap" style="margin-top:1rem;">
+            <table class="hotspot-table">
+              <thead>
+                <tr>
+                  <th>Rank</th>
+                  <th>Region</th>
+                  <th>AQI Index</th>
+                  <th>Hotspot Score</th>
+                  <th>Status</th>
+                  <th>Dominant Pollutant</th>
+                  <th>Persistence Trend</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="hotspot-table-body">
+                <tr>
+                  <td colspan="8" style="text-align:center; padding:2rem; color:var(--text-muted);">Loading calculated hotspot rankings...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- WHY IS THIS A HOTSPOT? -->
+        <section class="card" style="margin-bottom: 2rem;">
+          <div class="card-header-clean">
+            <span class="metric-kicker">Analytical Logic</span>
+            <span class="text-secondary-label">CPCB Multi-Factor Criteria</span>
+          </div>
+          <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--text-main); margin: 0.5rem 0 1rem 0;">Why is an Area Flagged as a Hotspot?</h3>
+
+          <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:1.25rem;">
+            <div style="background:var(--bg-card-subtle); border-radius:var(--radius-sm); padding:1.25rem;">
+              <div style="color:var(--accent-emerald); font-weight:700; font-size:0.85rem; margin-bottom:0.5rem;">01 / POLLUTION MAGNITUDE</div>
+              <p style="font-size:0.82rem; color:var(--text-muted); line-height:1.5;">Evaluates how far sub-hourly AQI exceeds the Indian NAAQS threshold of 100 AQI, scaling continuously up to severe hazard levels.</p>
+            </div>
+            <div style="background:var(--bg-card-subtle); border-radius:var(--radius-sm); padding:1.25rem;">
+              <div style="color:var(--status-moderate); font-weight:700; font-size:0.85rem; margin-bottom:0.5rem;">02 / PERSISTENCE DURATION</div>
+              <p style="font-size:0.82rem; color:var(--text-muted); line-height:1.5;">Differentiates momentary traffic spikes from stagnation where air remains degraded for over 6 to 24 consecutive hours.</p>
+            </div>
+            <div style="background:var(--bg-card-subtle); border-radius:var(--radius-sm); padding:1.25rem;">
+              <div style="color:var(--status-unhealthy); font-weight:700; font-size:0.85rem; margin-bottom:0.5rem;">03 / PARTICULATE CONCENTRATION</div>
+              <p style="font-size:0.82rem; color:var(--text-muted); line-height:1.5;">Heavily weights PM2.5 and PM10 particulate concentrations due to proven deep pulmonary and cardiovascular health impacts.</p>
+            </div>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="/static/components/shared.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", async () => {
+      const regSelect = document.getElementById("region-select");
+      await window.AirGuard.loadRegions(regSelect);
+
+      async function loadHotspots() {
+        try {
+          const resp = await fetch(`/api/hotspots?range=24h`);
+          if (!resp.ok) return;
+          const data = await resp.json();
+          const list = data.hotspots || [];
+
+          document.getElementById("hotspot-count-total").textContent = data.total_regions_analyzed || data.regions_analyzed || list.length;
+          const activeCount = data.hotspots_count !== undefined ? data.hotspots_count : list.filter(h => h.is_hotspot).length;
+          document.getElementById("hotspot-count-active").textContent = activeCount;
+
+          if (list.length > 0) {
+            const topReg = list[0].region || list[0].region_name || data.highest_hotspot_region || "Delhi";
+            const topScore = Math.round((list[0].hotspot_score <= 1 ? list[0].hotspot_score * 100 : list[0].hotspot_score) || 0);
+            document.getElementById("hotspot-top-name").textContent = topReg;
+            document.getElementById("hotspot-top-score").textContent = `Hotspot Score: ${topScore}/100`;
+          }
+
+          const tbody = document.getElementById("hotspot-table-body");
+          tbody.innerHTML = "";
+
+          if (list.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:2rem; color:var(--text-muted);">No hotspot regions currently identified.</td></tr>`;
+            return;
+          }
+
+          list.forEach((h, idx) => {
+            const tr = document.createElement("tr");
+            const regName = h.region || h.region_name || `Region ${h.region_id}`;
+            const aqiVal = h.current_aqi !== null && h.current_aqi !== undefined ? Math.round(h.current_aqi) : "—";
+            const rawScore = h.hotspot_score || 0;
+            const scoreVal = Math.round(rawScore <= 1 ? rawScore * 100 : rawScore);
+            const isH = Boolean(h.is_hotspot);
+
+            tr.innerHTML = `
+              <td style="font-weight:700; color:var(--text-muted);">#${idx + 1}</td>
+              <td style="font-weight:700; color:var(--text-main);">${regName}</td>
+              <td><span style="font-family:JetBrains Mono,monospace; font-weight:700; color:var(--text-main);">${aqiVal}</span> <span style="font-size:0.75rem; color:var(--text-muted);">AQI</span></td>
+              <td>
+                <div style="display:flex; align-items:center; gap:0.5rem;">
+                  <strong style="color:${isH ? '#ea580c' : 'var(--text-main)'}; font-family:JetBrains Mono,monospace;">${scoreVal}</strong>
+                  <div style="flex:1; max-width:80px; height:5px; background:var(--bg-input); border-radius:9999px; overflow:hidden;">
+                    <div style="height:100%; width:${scoreVal}%; background:${isH ? '#ea580c' : '#10b981'}; border-radius:9999px;"></div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <span class="badge-status-pill ${isH ? 'badge-high' : 'badge-good'}">
+                  ${isH ? 'HOTSPOT' : 'NORMAL'}
+                </span>
+              </td>
+              <td><span style="color:var(--text-main); font-weight:600;">${h.dominant_pollutant || 'PM2.5'}</span></td>
+              <td><span style="color:var(--text-muted); font-size:0.8rem;">${h.trend || 'Persistent'}</span></td>
+              <td>
+                <a href="/dashboard" onclick="localStorage.setItem('airguard_active_region_name', '${regName}'); localStorage.setItem('airguard_active_region_id', '${h.region_id}');" style="color:var(--accent-emerald); font-weight:600; text-decoration:none; font-size:0.82rem;">
+                  View &rarr;
+                </a>
+              </td>
+            `;
+            tbody.appendChild(tr);
+          });
+        } catch (e) {
+          console.error("Hotspots load error:", e);
+        }
+      }
+
+      const btnRefresh = document.getElementById("btn-refresh");
+      if (btnRefresh) {
+        btnRefresh.addEventListener("click", loadHotspots);
+      }
+      loadHotspots();
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AirGuard AI — Real-Time Environmental Intelligence &amp; Predictive Monitoring</title>
+  <meta name="description" content="AirGuard AI is a commercial-grade environmental intelligence platform combining real-time atmospheric telemetry, ML predictive forecasting, multi-factor hotspot detection, causal anomaly analysis, and composite risk assessment.">
+
+  <!-- Google Fonts: Inter & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Leaflet CSS for Map Preview -->
+  <link rel="stylesheet" href="/static/vendor/leaflet.css">
+
+  <!-- Design System -->
+  <link rel="stylesheet" href="/static/styles/index.css">
+</head>
+<body class="landing-shell">
+
+  <!-- =====================================================================
+       1. LANDING TOP NAVIGATION
+       ===================================================================== -->
+  <nav class="landing-nav" aria-label="Main Navigation">
+    <a href="/" class="landing-nav-brand">
+      <div class="sidebar-brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/>
+        </svg>
+      </div>
+      <div class="sidebar-brand-text">
+        <span class="brand-title">AIRGUARD AI</span>
+        <span class="brand-subtitle">Environmental Intel</span>
+      </div>
+    </a>
+
+    <ul class="landing-nav-links">
+      <li><a href="#how-it-works" class="landing-nav-link">How It Works</a></li>
+      <li><a href="#features" class="landing-nav-link">Features</a></li>
+      <li><a href="#predictive" class="landing-nav-link">Prediction</a></li>
+      <li><a href="#live-map" class="landing-nav-link">Live Map</a></li>
+      <li><a href="/dashboard" class="landing-nav-link">Executive Dashboard</a></li>
+    </ul>
+
+    <div style="display:flex; align-items:center; gap:0.75rem;">
+      <a href="/dashboard" class="btn-primary" style="padding: 0.55rem 1.25rem; font-size: 0.85rem; text-decoration: none;">
+        Launch Platform &rarr;
+      </a>
+    </div>
+  </nav>
+
+  <!-- =====================================================================
+       2. HERO SECTION
+       ===================================================================== -->
+  <section class="landing-hero" id="hero">
+    <div class="landing-hero-badge">
+      <span class="pulse-indicator"></span>
+      <span>Phase 8 Production Ready &bull; Zero Fabricated Telemetry</span>
+    </div>
+
+    <h1 class="landing-hero-title">
+      Understand Your Air.<br>Predict What Comes Next.
+    </h1>
+
+    <p class="landing-hero-subtitle">
+      AirGuard AI is an environmental intelligence platform combining real-time atmospheric telemetry, machine-learning predictive forecasting, multi-factor hotspot detection, and causal anomaly identification.
+    </p>
+
+    <!-- Interactive Region Selector & Quick Entry -->
+    <div style="max-width: 620px; margin: 0 auto 2.5rem auto; background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 0.75rem 1rem; display: flex; align-items: center; gap: 0.75rem; box-shadow: var(--shadow-ambient);">
+      <span style="color: var(--text-muted); font-size: 0.8rem; font-weight: 600; text-transform: uppercase;">Region:</span>
+      <select id="region-select" class="select-region" style="flex: 1; height: 38px;" aria-label="Select Monitored Region">
+        <option value="1">Chennai, India</option>
+      </select>
+      <a href="/dashboard" class="btn-primary" style="height: 38px; display: inline-flex; align-items: center; padding: 0 1.25rem; text-decoration: none;">
+        Explore Dashboard
+      </a>
+    </div>
+
+    <div class="landing-hero-actions">
+      <a href="/dashboard" class="btn-primary" style="text-decoration:none; padding:0.75rem 1.75rem;">
+        Open Executive Dashboard
+      </a>
+      <a href="/air-quality" class="btn-ghost" style="text-decoration:none; padding:0.75rem 1.75rem;">
+        View Live Air Quality
+      </a>
+      <a href="/map" class="btn-ghost" style="text-decoration:none; padding:0.75rem 1.75rem;">
+        Explore Pollution Map
+      </a>
+    </div>
+
+    <!-- Live Telemetry Status Banner -->
+    <div style="display:inline-flex; align-items:center; gap:1.5rem; background:var(--bg-card-subtle); border:1px solid var(--border-subtle); border-radius:9999px; padding:0.5rem 1.5rem; font-size:0.82rem; color:var(--text-muted);">
+      <div id="live-status-pill" style="display:flex; align-items:center; gap:0.4rem; color:var(--accent-emerald); font-weight:600;">
+        <span class="status-indicator-dot good"></span> Live Telemetry Active
+      </div>
+      <div>Telemetry Sources: Open-Meteo &amp; CPCB Standards</div>
+      <div>Database: SQLite Causal Records</div>
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       3. LIVE ENVIRONMENTAL INTELLIGENCE SECTION
+       ===================================================================== -->
+  <section class="features-container" id="intelligence">
+    <div style="text-align: center; max-width: 700px; margin: 0 auto 3rem auto;">
+      <div class="section-kicker">Integrated Environmental Intelligence</div>
+      <h2 class="section-heading-large">Eight Disciplines in One Platform</h2>
+      <p class="section-desc-large" style="margin: 0 auto;">
+        Traditional monitors display only static historical numbers. AirGuard AI brings continuous real-time data ingestion together with machine learning and automated risk reasoning.
+      </p>
+    </div>
+
+    <div class="feature-cards-grid">
+      <div class="flow-step-card">
+        <div class="flow-step-num">01 / TELEMETRY</div>
+        <div class="flow-step-title">Real-Time AQI</div>
+        <div class="flow-step-desc">Sub-hourly particulate and gaseous air quality readings computed via Indian NAAQS standards.</div>
+      </div>
+      <div class="flow-step-card">
+        <div class="flow-step-num">02 / ATMOSPHERE</div>
+        <div class="flow-step-title">Weather Factors</div>
+        <div class="flow-step-desc">Ambient temperature, relative humidity, wind velocity, direction, pressure, and precipitation.</div>
+      </div>
+      <div class="flow-step-card">
+        <div class="flow-step-num">03 / INGESTION</div>
+        <div class="flow-step-title">Historical Database</div>
+        <div class="flow-step-desc">Continuous SQLite storage enforcing zero lookahead bias with automated integrity and outlier audits.</div>
+      </div>
+      <div class="flow-step-card">
+        <div class="flow-step-num">04 / MACHINE LEARNING</div>
+        <div class="flow-step-title">Predictive ML</div>
+        <div class="flow-step-desc">Random Forest Regressor forecasting next-hour AQI with uncertainty confidence spreads.</div>
+      </div>
+      <div class="flow-step-card">
+        <div class="flow-step-num">05 / PERSISTENCE</div>
+        <div class="flow-step-title">Hotspot Detection</div>
+        <div class="flow-step-desc">Identifies persistent high-pollution regional corridors based on multi-hour rolling thresholds.</div>
+      </div>
+      <div class="flow-step-card">
+        <div class="flow-step-num">06 / CAUSALITY</div>
+        <div class="flow-step-title">Anomaly Engine</div>
+        <div class="flow-step-desc">Detects sudden statistical spikes ($|z| \ge 2.5$) departing from historical baseline distributions.</div>
+      </div>
+      <div class="flow-step-card">
+        <div class="flow-step-num">07 / MULTI-FACTOR</div>
+        <div class="flow-step-title">Risk Assessment</div>
+        <div class="flow-step-desc">Composite 0–100 risk scoring synthesizing AQI, PM2.5, hotspot duration, and anomaly severity.</div>
+      </div>
+      <div class="flow-step-card">
+        <div class="flow-step-num">08 / ACTIONABLE</div>
+        <div class="flow-step-title">Smart Advisories</div>
+        <div class="flow-step-desc">Contextual guidance for sensitive groups, outdoor activities, travel, and indoor ventilation.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       4. HOW AIRGUARD WORKS (VISUAL PIPELINE FLOW)
+       ===================================================================== -->
+  <section class="features-container" id="how-it-works">
+    <div style="text-align: center; max-width: 700px; margin: 0 auto;">
+      <div class="section-kicker">End-to-End Pipeline</div>
+      <h2 class="section-heading-large">How AirGuard AI Processes Intelligence</h2>
+      <p class="section-desc-large" style="margin: 0 auto;">
+        From raw sensor telemetry to preventative health advisories in seconds.
+      </p>
+    </div>
+
+    <div class="flow-diagram">
+      <div class="flow-step-card">
+        <div class="flow-step-num">STEP 1</div>
+        <div class="flow-step-title">Live Telemetry</div>
+        <div class="flow-step-desc">Real-time Open-Meteo &amp; atmospheric sensors ingest PM2.5, PM10, gases &amp; weather.</div>
+      </div>
+      <div class="flow-step-card">
+        <div class="flow-step-num">STEP 2</div>
+        <div class="flow-step-title">Preprocessing</div>
+        <div class="flow-step-desc">Outlier filtering, causal SQLite persistence, and rolling lag feature creation.</div>
+      </div>
+      <div class="flow-step-card">
+        <div class="flow-step-num">STEP 3</div>
+        <div class="flow-step-title">ML Inference</div>
+        <div class="flow-step-desc">Random Forest ensemble evaluates weather-pollution interactions and temporal trends.</div>
+      </div>
+      <div class="flow-step-card">
+        <div class="flow-step-num">STEP 4</div>
+        <div class="flow-step-title">Forecast</div>
+        <div class="flow-step-desc">Generates 1-hour ahead predicted AQI, mathematical trend vectors &amp; bounds.</div>
+      </div>
+      <div class="flow-step-card">
+        <div class="flow-step-num">STEP 5</div>
+        <div class="flow-step-title">Risk Scoring</div>
+        <div class="flow-step-desc">Combines pollution magnitude, hotspot persistence, and anomaly spike Z-scores.</div>
+      </div>
+      <div class="flow-step-card">
+        <div class="flow-step-num">STEP 6</div>
+        <div class="flow-step-title">Advisories</div>
+        <div class="flow-step-desc">Dispatches categorized guidance, alert notifications, and geospatial map updates.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       5. FEATURE SUITES (LINKS TO SEPARATE PAGES)
+       ===================================================================== -->
+  <section class="features-container" id="features">
+    <div style="text-align: center; max-width: 700px; margin: 0 auto 3rem auto;">
+      <div class="section-kicker">Dedicated Feature Applications</div>
+      <h2 class="section-heading-large">Explore AirGuard Pages</h2>
+      <p class="section-desc-large" style="margin: 0 auto;">
+        Every feature has its own dedicated full page with deep analytics and focused tools.
+      </p>
+    </div>
+
+    <div class="feature-cards-grid">
+      <!-- 1. Executive Dashboard -->
+      <a href="/dashboard" class="feature-card-item">
+        <div class="feature-card-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg>
+        </div>
+        <div class="feature-card-title">Executive Dashboard</div>
+        <div class="feature-card-desc">Comprehensive at-a-glance overview of current AQI, risk index, next-hour forecast, and preview cards.</div>
+        <div class="feature-card-link">Launch Dashboard &rarr;</div>
+      </a>
+
+      <!-- 2. Air Quality Deep-Dive -->
+      <a href="/air-quality" class="feature-card-item">
+        <div class="feature-card-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m4.93 4.93 4.24 4.24"/><path d="m14.83 9.17 4.24-4.24"/></svg>
+        </div>
+        <div class="feature-card-title">Air Quality</div>
+        <div class="feature-card-desc">Detailed 6-pollutant concentration breakdown, NAAQS benchmark comparison, and dominant pollutant analysis.</div>
+        <div class="feature-card-link">View Air Quality &rarr;</div>
+      </a>
+
+      <!-- 3. ML Predictions -->
+      <a href="/predictions" class="feature-card-item">
+        <div class="feature-card-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m22 7-8.5 8.5-5-5L2 17"/><path d="M16 7h6v6"/></svg>
+        </div>
+        <div class="feature-card-title">ML Predictions</div>
+        <div class="feature-card-desc">Random Forest predictive model, confidence uncertainty intervals, MAE/RMSE/R² metrics, and feature importance.</div>
+        <div class="feature-card-link">View Predictions &rarr;</div>
+      </a>
+
+      <!-- 4. Regional Hotspots -->
+      <a href="/hotspots" class="feature-card-item">
+        <div class="feature-card-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2c.5 3 2.5 4.5 4 6.5 1.5 2 2 4.5 1 7.5-1 3-3.5 5-6 5s-6-2.5-6-5.5c0-3 2-5 3.5-7 .5-.7 1-1.5 1.5-2.5.5-1 1-2.5 2-4z"/></svg>
+        </div>
+        <div class="feature-card-title">Pollution Hotspots</div>
+        <div class="feature-card-desc">Multi-hour persistent pollution scoring, regional hotspot ranking table, and dominant pollutant identification.</div>
+        <div class="feature-card-link">Explore Hotspots &rarr;</div>
+      </a>
+
+      <!-- 5. Statistical Anomalies -->
+      <a href="/anomalies" class="feature-card-item">
+        <div class="feature-card-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        </div>
+        <div class="feature-card-title">Pollution Anomalies</div>
+        <div class="feature-card-desc">Statistical Z-score deviation detection ($|z| \ge 2.5$) vs historical baselines, anomaly timelines, and spike alerts.</div>
+        <div class="feature-card-link">Inspect Anomalies &rarr;</div>
+      </a>
+
+      <!-- 6. Environmental Risk -->
+      <a href="/risk" class="feature-card-item">
+        <div class="feature-card-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <div class="feature-card-title">Risk Assessment</div>
+        <div class="feature-card-desc">Composite 0–100 Environmental Risk Index distinguishing instantaneous AQI from multi-factor environmental risk.</div>
+        <div class="feature-card-link">Assess Risk &rarr;</div>
+      </a>
+
+      <!-- 7. Smart Recommendations -->
+      <a href="/recommendations" class="feature-card-item">
+        <div class="feature-card-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+        </div>
+        <div class="feature-card-title">Smart Advisories</div>
+        <div class="feature-card-desc">Categorized guidance for health, outdoor sports, travel, ventilation, and sensitive groups with clear rationales.</div>
+        <div class="feature-card-link">View Advisories &rarr;</div>
+      </a>
+
+      <!-- Phase 9: Environmental Insights & Compliance -->
+      <a href="/environmental-insights" class="feature-card-item">
+        <div class="feature-card-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        </div>
+        <div class="feature-card-title">Environmental Insights</div>
+        <div class="feature-card-desc">User-selected location &amp; custom time-window analysis, verified regulatory compliance records, and condition-conditioned best practices.</div>
+        <div class="feature-card-link">Explore Insights &rarr;</div>
+      </a>
+
+      <!-- 8. Alerts Center -->
+      <a href="/alerts" class="feature-card-item">
+        <div class="feature-card-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+        </div>
+        <div class="feature-card-title">Alert Center</div>
+        <div class="feature-card-desc">Real-time incident notifications with read/acknowledgment status management and severity indicators.</div>
+        <div class="feature-card-link">Check Alerts &rarr;</div>
+      </a>
+
+      <!-- 9. Geospatial Map -->
+      <a href="/map" class="feature-card-item">
+        <div class="feature-card-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" x2="9" y1="3" y2="18"/><line x1="15" x2="15" y1="6" y2="21"/></svg>
+        </div>
+        <div class="feature-card-title">Pollution Map</div>
+        <div class="feature-card-desc">Interactive Leaflet GIS map with Dark Matter styling, hotspot radar halos, custom popups, and quick filters.</div>
+        <div class="feature-card-link">Launch Map &rarr;</div>
+      </a>
+
+      <!-- 10. Historical Trends -->
+      <a href="/history" class="feature-card-item">
+        <div class="feature-card-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <div class="feature-card-title">Historical Trends</div>
+        <div class="feature-card-desc">24H / 7D / 30D historical telemetry trends with database integrity audit and data quality counters.</div>
+        <div class="feature-card-link">View History &rarr;</div>
+      </a>
+
+      <!-- 11. Settings -->
+      <a href="/settings" class="feature-card-item">
+        <div class="feature-card-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+        </div>
+        <div class="feature-card-title">Settings &amp; Diagnostics</div>
+        <div class="feature-card-desc">Configure default monitored region, telemetry refresh intervals, notification thresholds, and view API health.</div>
+        <div class="feature-card-link">Configure &rarr;</div>
+      </a>
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       6. INTERACTIVE MAP PREVIEW ON LANDING
+       ===================================================================== -->
+  <section class="features-container" id="live-map">
+    <div style="display:flex; align-items:flex-end; justify-content:space-between; margin-bottom:1.5rem; flex-wrap:wrap; gap:1rem;">
+      <div>
+        <div class="section-kicker">Geospatial Telemetry</div>
+        <h2 class="section-heading-large" style="margin-bottom: 0.35rem;">National Pollution Overview</h2>
+        <p class="section-desc-large" style="margin-bottom: 0;">Interactive map of monitored regional coordinates with real-time AQI halos.</p>
+      </div>
+      <div>
+        <a href="/map" class="btn-primary" style="text-decoration:none;">
+          Launch Full Screen Map &rarr;
+        </a>
+      </div>
+    </div>
+
+    <!-- Leaflet Map Container (ID preserved for Phase 7 test) -->
+    <div class="map-view-shell" style="border-radius: var(--radius-lg); overflow: hidden; border: 1px solid var(--border-subtle); position: relative;">
+      <div id="pollution-map" class="pollution-map-element" style="height: 480px; width: 100%;"></div>
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       7. PREDICTIVE INTELLIGENCE & SAFER DECISIONS SECTION
+       ===================================================================== -->
+  <section class="features-container" id="predictive">
+    <div style="background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 3rem; margin-bottom: 4rem;">
+      <div style="max-width: 750px;">
+        <div class="section-kicker">Predictive Science</div>
+        <h2 class="section-heading-large">Why Forecasting Matters</h2>
+        <p style="font-size: 1.05rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 2rem;">
+          Traditional air quality apps inform you that the air was bad an hour ago. AirGuard AI analyzes current atmospheric telemetry and historical patterns to anticipate whether pollution will worsen over the coming hour, allowing proactive protection.
+        </p>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem;">
+        <div style="background: var(--bg-card-subtle); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 1.25rem;">
+          <div style="color: var(--accent-emerald); font-weight: 700; font-size: 0.85rem; margin-bottom: 0.5rem;">01 / IS IT SAFE?</div>
+          <p style="font-size: 0.82rem; color: var(--text-muted); line-height: 1.45;">Evaluates current particulate exposure against Indian NAAQS and WHO guidelines.</p>
+        </div>
+        <div style="background: var(--bg-card-subtle); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 1.25rem;">
+          <div style="color: var(--status-moderate); font-weight: 700; font-size: 0.85rem; margin-bottom: 0.5rem;">02 / IS IT RISING?</div>
+          <p style="font-size: 0.82rem; color: var(--text-muted); line-height: 1.45;">Forecasts pollution velocity and direction vectors to preempt dangerous spikes.</p>
+        </div>
+        <div style="background: var(--bg-card-subtle); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 1.25rem;">
+          <div style="color: var(--status-unhealthy); font-weight: 700; font-size: 0.85rem; margin-bottom: 0.5rem;">03 / IS IT A HOTSPOT?</div>
+          <p style="font-size: 0.82rem; color: var(--text-muted); line-height: 1.45;">Differentiates transient traffic plumes from prolonged regional stagnation.</p>
+        </div>
+        <div style="background: var(--bg-card-subtle); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 1.25rem;">
+          <div style="color: var(--status-critical); font-weight: 700; font-size: 0.85rem; margin-bottom: 0.5rem;">04 / WHAT TO DO?</div>
+          <p style="font-size: 0.82rem; color: var(--text-muted); line-height: 1.45;">Delivers contextual precautions tailored to vulnerable groups, outdoor sports, and travel.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       8. FINAL CTA
+       ===================================================================== -->
+  <section style="padding: 0 2rem;">
+    <div class="cta-box">
+      <div class="section-kicker" style="margin-bottom: 0.75rem;">Get Started Now</div>
+      <h2 style="font-size: 2.75rem; font-weight: 800; color: #ffffff; margin-bottom: 1rem; letter-spacing: -0.02em;">
+        Stay informed. Breathe smarter.
+      </h2>
+      <p style="font-size: 1.15rem; color: var(--text-muted); max-width: 600px; margin: 0 auto 2.5rem auto;">
+        Real-time intelligence and ML predictive forecasting designed for actionable environmental protection.
+      </p>
+      <div style="display:flex; justify-content:center; gap:1rem; flex-wrap:wrap;">
+        <a href="/dashboard" class="btn-primary" style="padding: 0.85rem 2rem; font-size: 0.95rem; text-decoration: none;">
+          Enter AirGuard &rarr;
+        </a>
+        <a href="/map" class="btn-ghost" style="padding: 0.85rem 2rem; font-size: 0.95rem; text-decoration: none;">
+          Explore Pollution Map
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       9. FOOTER
+       ===================================================================== -->
+  <footer class="landing-footer">
+    <div class="landing-footer-grid">
+      <div>
+        <div class="sidebar-brand-text" style="margin-bottom: 0.75rem;">
+          <span class="brand-title" style="font-size: 1.1rem; color: #ffffff;">AIRGUARD AI</span>
+          <span class="brand-subtitle">Environmental Intelligence Platform</span>
+        </div>
+        <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; max-width: 320px; margin-bottom: 1.5rem;">
+          Real-time air quality monitoring, ML predictive forecasting, and causal environmental risk assessment.
+        </p>
+        <div style="font-size: 0.78rem; color: var(--text-muted);">
+          Phase 8 Production Release &bull; Built with FastAPI, SQLite &amp; Scikit-Learn
+        </div>
+      </div>
+
+      <div>
+        <div style="font-size: 0.82rem; font-weight: 700; color: #ffffff; text-transform: uppercase; margin-bottom: 1rem;">Platform</div>
+        <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.6rem; font-size: 0.85rem;">
+          <li><a href="/dashboard" style="color: var(--text-muted); text-decoration: none;">Dashboard</a></li>
+          <li><a href="/air-quality" style="color: var(--text-muted); text-decoration: none;">Air Quality</a></li>
+          <li><a href="/predictions" style="color: var(--text-muted); text-decoration: none;">Predictions</a></li>
+          <li><a href="/map" style="color: var(--text-muted); text-decoration: none;">Pollution Map</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <div style="font-size: 0.82rem; font-weight: 700; color: #ffffff; text-transform: uppercase; margin-bottom: 1rem;">Intelligence</div>
+        <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.6rem; font-size: 0.85rem;">
+          <li><a href="/hotspots" style="color: var(--text-muted); text-decoration: none;">Hotspots</a></li>
+          <li><a href="/anomalies" style="color: var(--text-muted); text-decoration: none;">Anomalies</a></li>
+          <li><a href="/risk" style="color: var(--text-muted); text-decoration: none;">Risk Assessment</a></li>
+          <li><a href="/recommendations" style="color: var(--text-muted); text-decoration: none;">Recommendations</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <div style="font-size: 0.82rem; font-weight: 700; color: #ffffff; text-transform: uppercase; margin-bottom: 1rem;">Operations</div>
+        <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.6rem; font-size: 0.85rem;">
+          <li><a href="/environmental-insights" style="color: var(--text-muted); text-decoration: none;">Environmental Insights</a></li>
+          <li><a href="/alerts" style="color: var(--text-muted); text-decoration: none;">Alert Center</a></li>
+          <li><a href="/history" style="color: var(--text-muted); text-decoration: none;">History &amp; Audit</a></li>
+          <li><a href="/settings" style="color: var(--text-muted); text-decoration: none;">Settings</a></li>
+          <li><a href="/docs" target="_blank" style="color: var(--text-muted); text-decoration: none;">API Documentation</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div style="border-top: 1px solid var(--border-subtle); padding-top: 1.5rem; text-align: center; font-size: 0.78rem; color: var(--text-muted);">
+      &copy; 2026 AirGuard AI. All rights reserved. Indian NAAQS &amp; Open-Meteo atmospheric telemetry.
+    </div>
+  </footer>
+
+  <!-- Scripts: Leaflet Vendor, Shared Helper & Landing Logic -->
+  <script src="/static/vendor/leaflet.js"></script>
+  <script src="/static/components/shared.js"></script>
+  <script src="/static/components/app.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", async () => {
+      const regSelect = document.getElementById("region-select");
+      if (regSelect && window.AirGuard) {
+        await window.AirGuard.loadRegions(regSelect);
+      }
+
+      // Initialize landing map preview
+      if (typeof L !== "undefined" && document.getElementById("pollution-map")) {
+        try {
+          const lMap = L.map("pollution-map", {
+            center: [20.5937, 78.9629],
+            zoom: 5,
+            minZoom: 4,
+            maxZoom: 10,
+            scrollWheelZoom: false
+          });
+
+          L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png", {
+            attribution: '&copy; OpenStreetMap contributors &copy; CARTO',
+            subdomains: "abcd",
+            maxZoom: 19
+          }).addTo(lMap);
+
+          const resp = await fetch("/api/map-data");
+          if (resp.ok) {
+            const data = await resp.json();
+            const regions = data.regions || [];
+            regions.forEach(r => {
+              if (r.latitude === null || r.longitude === null) return;
+              const aqiVal = r.aqi !== null ? Math.round(r.aqi) : "—";
+              const color = r.aqi_color || "#10b981";
+              const mIcon = L.divIcon({
+                className: "custom-aqi-marker",
+                html: `<div style="width:26px; height:26px; border-radius:50%; background:${color}; border:2px solid #ffffff; box-shadow:0 0 10px ${color}88; display:flex; align-items:center; justify-content:center; color:#ffffff; font-size:9px; font-weight:800;">${aqiVal}</div>`,
+                iconSize: [26, 26],
+                iconAnchor: [13, 13]
+              });
+              const m = L.marker([r.latitude, r.longitude], { icon: mIcon }).addTo(lMap);
+              m.bindPopup(`<div style="font-family:Inter,sans-serif; padding:4px;"><strong>${r.region}</strong><br>AQI: ${aqiVal} (${r.aqi_category})<br><a href="/dashboard" style="color:#10b981; font-size:11px;">View Dashboard &rarr;</a></div>`);
+            });
+          }
+        } catch (e) {
+          console.warn("Landing map preview init:", e);
+        }
+      }
+    });
+  </script>
+</body>
+</html>

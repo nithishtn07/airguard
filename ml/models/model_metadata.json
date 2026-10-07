@@ -1,0 +1,113 @@
+{
+  "model_type": "RandomForestRegressor",
+  "model_version": "airguard_ra_20261005_161446",
+  "target": "target_aqi",
+  "trained_at": "2026-10-05T16:14:46.870067+00:00",
+  "training_rows": 1014,
+  "validation_rows": 217,
+  "test_rows": 219,
+  "features": [
+    "region_id",
+    "pm25",
+    "pm10",
+    "co",
+    "no2",
+    "so2",
+    "o3",
+    "temperature",
+    "humidity",
+    "wind_speed",
+    "wind_direction",
+    "pressure",
+    "rainfall",
+    "aqi_lag_1",
+    "aqi_lag_3",
+    "aqi_lag_6",
+    "aqi_rolling_mean_3",
+    "aqi_rolling_mean_6",
+    "pm25_rolling_mean_3",
+    "pm10_rolling_mean_3",
+    "hour",
+    "day_of_week",
+    "month",
+    "is_weekend",
+    "hour_sin",
+    "hour_cos",
+    "day_of_week_sin",
+    "day_of_week_cos"
+  ],
+  "feature_count": 28,
+  "metrics": {
+    "validation_comparison": {
+      "Naive Baseline": {
+        "mae": 48.79,
+        "rmse": 63.13,
+        "r2": -1.1166,
+        "mape": 51.83
+      },
+      "Random Forest": {
+        "mae": 43.55,
+        "rmse": 49.5,
+        "r2": -0.3014,
+        "mape": 53.02
+      },
+      "Gradient Boosting": {
+        "mae": 44.97,
+        "rmse": 52.47,
+        "r2": -0.462,
+        "mape": 55.08
+      }
+    },
+    "selected_validation": {
+      "mae": 43.55,
+      "rmse": 49.5,
+      "r2": -0.3014,
+      "mape": 53.02
+    },
+    "test": {
+      "mae": 54.63,
+      "rmse": 62.89,
+      "r2": -0.0429,
+      "mape": 66.45
+    }
+  },
+  "top_features": [
+    {
+      "feature": "aqi_rolling_mean_6",
+      "importance": 0.0961,
+      "description": "6-Observation Rolling AQI Mean"
+    },
+    {
+      "feature": "aqi_lag_6",
+      "importance": 0.0821,
+      "description": "6-Step Prior AQI Observation"
+    },
+    {
+      "feature": "aqi_lag_3",
+      "importance": 0.0586,
+      "description": "3-Step Prior AQI Observation"
+    },
+    {
+      "feature": "wind_direction",
+      "importance": 0.0517,
+      "description": "Wind Direction Degrees"
+    },
+    {
+      "feature": "co",
+      "importance": 0.0493,
+      "description": "Carbon Monoxide \u00b5g/m\u00b3"
+    },
+    {
+      "feature": "so2",
+      "importance": 0.0482,
+      "description": "Sulphur Dioxide \u00b5g/m\u00b3"
+    },
+    {
+      "feature": "day_of_week",
+      "importance": 0.0471,
+      "description": "Day of Week (0-6)"
+    }
+  ],
+  "region_id": null,
+  "model_file": "airguard_aqi_model.joblib"
+}

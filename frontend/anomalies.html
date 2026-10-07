@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AirGuard AI — Pollution Anomalies Intelligence</title>
+  <meta name="description" content="Dedicated Pollution Anomalies Intelligence: Causal statistical anomaly detection departing from historical distributions (|z| >= 2.5).">
+
+  <!-- Google Fonts: Inter & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="/static/styles/index.css">
+</head>
+<body>
+
+  <div class="app-shell">
+
+    <!-- SIDEBAR -->
+    <aside class="app-sidebar" id="app-sidebar" aria-label="Main Navigation">
+      <div class="sidebar-header">
+        <a href="/" class="sidebar-brand">
+          <div class="sidebar-brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/>
+            </svg>
+          </div>
+          <div class="sidebar-brand-text">
+            <span class="brand-title">AIRGUARD AI</span>
+            <span class="brand-subtitle">Environmental Intel</span>
+          </div>
+        </a>
+        <button id="sidebar-close-btn" class="sidebar-close-btn" aria-label="Close sidebar">✕</button>
+      </div>
+
+      <div class="sidebar-nav-container">
+        <div class="nav-group">
+          <div class="nav-group-title">Core Telemetry</div>
+          <a href="/dashboard" class="nav-link">
+            <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg></span>
+            <span class="nav-text">Dashboard</span>
+          </a>
+          <a href="/air-quality" class="nav-link">
+            <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m4.93 4.93 4.24 4.24"/><path d="m14.83 9.17 4.24-4.24"/></svg></span>
+            <span class="nav-text">Air Quality</span>
+          </a>
+          <a href="/predictions" class="nav-link">
+            <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m22 7-8.5 8.5-5-5L2 17"/><path d="M16 7h6v6"/></svg></span>
+            <span class="nav-text">Predictions</span>
+          </a>
+          <a href="/history" class="nav-link">
+            <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>
+            <span class="nav-text">Historical Analysis</span>
+          </a>
+        </div>
+
+        <div class="nav-group">
+          <div class="nav-group-title">Spatial & Analytics</div>
+          <a href="/hotspots" class="nav-link">
+            <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2c.5 3 2.5 4.5 4 6.5 1.5 2 2 4.5 1 7.5-1 3-3.5 5-6 5s-6-2.5-6-5.5c0-3 2-5 3.5-7 .5-.7 1-1.5 1.5-2.5.5-1 1-2.5 2-4z"/></svg></span>
+            <span class="nav-text">Hotspots</span>
+          </a>
+          <a href="/anomalies" class="nav-link active">
+            <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></span>
+            <span class="nav-text">Anomalies</span>
+          </a>
+          <a href="/risk" class="nav-link">
+            <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>
+            <span class="nav-text">Risk Intelligence</span>
+          </a>
+          <a href="/recommendations" class="nav-link">
+            <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></span>
+            <span class="nav-text">Recommendations</span>
+          </a>
+        </div>
+
+        <div class="nav-group">
+          <div class="nav-group-title">Operations & Geospatial</div>
+          <a href="/environmental-insights" class="nav-link">
+            <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></span>
+            <span class="nav-text">Environmental Insights</span>
+          </a>
+          <a href="/alerts" class="nav-link">
+            <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg></span>
+            <span class="nav-text">Alerts</span>
+          </a>
+          <a href="/map" class="nav-link">
+            <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" x2="9" y1="3" y2="18"/><line x1="15" x2="15" y1="6" y2="21"/></svg></span>
+            <span class="nav-text">Air Quality Map</span>
+          </a>
+          <a href="/settings" class="nav-link">
+            <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg></span>
+            <span class="nav-text">Settings</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="system-status-indicator">
+          <span class="status-indicator-dot good"></span>
+          <span class="status-text">Production Operational</span>
+        </div>
+      </div>
+    </aside>
+
+    <div id="sidebar-overlay" class="sidebar-overlay"></div>
+
+    <!-- MAIN APP CANVAS -->
+    <div class="app-main">
+
+      <!-- TOPBAR -->
+      <header class="app-topbar">
+        <div class="topbar-left">
+          <button id="mobile-menu-trigger" class="mobile-menu-btn" aria-label="Toggle navigation">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+          </button>
+          <div class="region-picker-group">
+            <select id="region-select" class="select-region" aria-label="Select Region">
+              <option value="1">Chennai, India</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="topbar-right">
+          <div class="status-pill active" id="live-status-pill">
+            <span class="pulse-indicator"></span>
+            <span>Anomaly Detector Active</span>
+          </div>
+          <div class="header-timestamp-box">
+            <span class="text-secondary-label">Updated</span>
+            <span id="header-last-updated" class="timestamp-val">Just now</span>
+          </div>
+          <button id="btn-refresh" class="btn-ghost btn-sm" title="Refresh Live Data" aria-label="Refresh Data">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 21h5v-5"/></svg>
+            <span>Refresh</span>
+          </button>
+          <a href="/alerts" class="btn-ghost btn-sm" title="Alerts" style="text-decoration:none;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+          </a>
+          <a href="/settings" class="btn-ghost btn-sm" title="Settings" style="text-decoration:none;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          </a>
+        </div>
+      </header>
+
+      <!-- CANVAS CONTENT -->
+      <main class="content-canvas">
+
+        <!-- Page Header -->
+        <div class="page-hero-header">
+          <div>
+            <span class="section-kicker">Causal Statistical Intelligence</span>
+            <h1 class="page-title-main">Pollution Anomalies</h1>
+            <p class="page-subtitle-main">Z-score statistical deviation detection identifying uncharacteristic pollution spikes for <span id="anom-region-name" style="color:var(--text-main); font-weight:700;">Chennai</span>.</p>
+          </div>
+        </div>
+
+        <!-- CONCEPTUAL CLARIFICATION BANNER -->
+        <div class="card" style="margin-bottom:1.5rem; background:var(--bg-card-subtle); border-left: 3px solid var(--accent-emerald);">
+          <h3 style="font-size: 1.05rem; font-weight: 700; color: var(--text-main); margin-bottom: 0.35rem;">
+            Hotspot vs. Anomaly Distinction
+          </h3>
+          <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.55;">
+            A <strong>Hotspot</strong> indicates persistent elevated pollution that consistently exceeds ambient standards. An <strong>Anomaly</strong> represents an abrupt statistical departure where observed concentrations significantly diverge from the region's historical baseline mean (|z| &ge; 2.5).
+          </p>
+        </div>
+
+        <!-- STATUS OVERVIEW ROW -->
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:1.25rem; margin-bottom:1.5rem;">
+          <div class="card" style="padding:1.25rem;">
+            <span class="metric-kicker">Current Anomaly Status</span>
+            <div style="font-size:2rem; font-weight:800; color:var(--text-main); margin:0.35rem 0;" id="anom-status-label">NORMAL</div>
+            <span style="font-size:0.78rem; color:var(--text-muted);" id="anom-obs-count">Observations Analyzed: —</span>
+          </div>
+
+          <div class="card" style="padding:1.25rem;">
+            <span class="metric-kicker">Statistical Threshold Criteria</span>
+            <div style="font-size:2rem; font-weight:800; color:var(--status-info); margin:0.35rem 0;">|z| &ge; 2.5 &sigma;</div>
+            <span style="font-size:0.78rem; color:var(--text-muted);">99% Confidence Interval Departure</span>
+          </div>
+        </div>
+
+        <!-- ANOMALY TIMELINE CHART -->
+        <section class="card" style="margin-bottom: 1.5rem;">
+          <div class="card-header-clean">
+            <div>
+              <span class="metric-kicker">Causal Timeline</span>
+              <h3 style="font-size: 1.05rem; font-weight: 700; color: var(--text-main);">Historical Baseline Mean vs Telemetry</h3>
+            </div>
+            <div style="font-size:0.78rem; color:var(--text-muted);">
+              Rolling Baseline with 2.5&sigma; Upper Boundary
+            </div>
+          </div>
+
+          <div class="chart-container-clean" style="height: 200px; margin-top: 1rem;">
+            <svg id="anom-chart-svg" class="chart-svg" viewBox="0 0 800 200" preserveAspectRatio="none"></svg>
+          </div>
+        </section>
+
+        <!-- DETECTED ANOMALIES LIST -->
+        <section class="card" style="margin-bottom: 2rem;">
+          <div class="card-header-clean">
+            <div>
+              <span class="metric-kicker">Incident Log</span>
+              <h3 style="font-size: 1.05rem; font-weight: 700; color: var(--text-main);">Flagged Statistical Deviations</h3>
+            </div>
+          </div>
+
+          <div id="anomalies-container" style="display:flex; flex-direction:column; gap:1rem; margin-top:1rem;">
+            <div style="padding:2rem; text-align:center; color:var(--text-muted); font-size:0.85rem;">
+              Loading anomaly intelligence...
+            </div>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="/static/components/shared.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", async () => {
+      const regSelect = document.getElementById("region-select");
+      let activeRegion = await window.AirGuard.loadRegions(regSelect);
+
+      async function loadAnomalies(region) {
+        const r = region || window.AirGuard.getCurrentRegion() || { id: 1, name: "Chennai" };
+        const regionName = r.name || "Chennai";
+        document.getElementById("anom-region-name").textContent = regionName;
+
+        try {
+          const resp = await fetch(`/api/anomalies/${encodeURIComponent(regionName)}`);
+          if (!resp.ok) return;
+          const data = await resp.json();
+
+          const st = data.anomaly_status || data.overall_status || (data.has_anomalies ? "ANOMALIES DETECTED" : "NORMAL");
+          document.getElementById("anom-status-label").textContent = st;
+          document.getElementById("anom-status-label").style.color = (st === "NORMAL" ? "#10b981" : "#ea580c");
+          document.getElementById("anom-obs-count").textContent = `Observations Analyzed: ${data.observations_analyzed || 0}`;
+
+          const container = document.getElementById("anomalies-container");
+          container.innerHTML = "";
+
+          const list = data.anomalies || [];
+          if (list.length === 0) {
+            container.innerHTML = `
+              <div style="padding:2rem; text-align:center; background:var(--bg-card-subtle); border-radius:var(--radius-sm); border:1px solid var(--border-subtle);">
+                <div style="color:var(--accent-emerald); font-weight:700; margin-bottom:0.35rem;">No Statistical Anomalies Detected</div>
+                <p style="font-size:0.82rem; color:var(--text-muted); margin:0;">Current atmospheric telemetry for ${regionName} aligns with historical baseline distributions (|z| &lt; 2.5).</p>
+              </div>
+            `;
+          } else {
+            list.forEach(a => {
+              const card = document.createElement("div");
+              card.className = "anomaly-item-card" + (a.severity === "EXTREME ANOMALY" ? " extreme" : "");
+              card.innerHTML = `
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem;">
+                  <span style="font-weight:700; color:var(--text-main); font-size:0.95rem;">${a.metric} Elevated Spike</span>
+                  <span class="badge-status-pill badge-high" style="background:${a.severity_color}22; color:${a.severity_color}; border:1px solid ${a.severity_color}55;">
+                    ${a.severity}
+                  </span>
+                </div>
+                <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:1rem; background:var(--bg-card); padding:0.75rem; border-radius:var(--radius-sm); margin-bottom:0.75rem; font-size:0.8rem;">
+                  <div>
+                    <span style="color:var(--text-muted); font-size:0.72rem; text-transform:uppercase;">Observed Value</span>
+                    <div style="font-weight:700; color:${a.severity_color}; font-size:1.1rem;">${a.observed_value}</div>
+                  </div>
+                  <div>
+                    <span style="color:var(--text-muted); font-size:0.72rem; text-transform:uppercase;">Baseline Mean</span>
+                    <div style="font-weight:700; color:var(--text-main); font-size:1.1rem;">${a.expected_value} (±${a.baseline_std})</div>
+                  </div>
+                  <div>
+                    <span style="color:var(--text-muted); font-size:0.72rem; text-transform:uppercase;">Z-Score</span>
+                    <div style="font-weight:700; color:var(--text-main); font-size:1.1rem;">${a.z_score > 0 ? '+' : ''}${a.z_score}</div>
+                  </div>
+                  <div>
+                    <span style="color:var(--text-muted); font-size:0.72rem; text-transform:uppercase;">Anomaly Score</span>
+                    <div style="font-weight:700; color:var(--text-main); font-size:1.1rem;">${a.anomaly_score}</div>
+                  </div>
+                </div>
+                <div style="font-size:0.82rem; color:var(--text-muted); line-height:1.45;">${a.reason}</div>
+              `;
+              container.appendChild(card);
+            });
+          }
+
+          // Render Timeline
+          renderAnomalyTimeline(data.timeline || []);
+
+        } catch (e) {
+          console.error("Anomalies load error:", e);
+        }
+      }
+
+      function renderAnomalyTimeline(timeline) {
+        const svg = document.getElementById("anom-chart-svg");
+        svg.innerHTML = "";
+        const valid = timeline.filter(t => t.aqi !== null);
+        if (valid.length < 2) return;
+
+        const width = 800;
+        const height = 200;
+        const pad = { top: 20, right: 30, bottom: 30, left: 45 };
+        const w = width - pad.left - pad.right;
+        const h = height - pad.top - pad.bottom;
+
+        const vals = valid.map(t => Number(t.aqi));
+        const min = Math.max(0, Math.floor(Math.min(...vals) * 0.85));
+        const max = Math.ceil(Math.max(...vals) * 1.15) || 100;
+
+        const getX = (i) => pad.left + (i / (valid.length - 1)) * w;
+        const getY = (v) => pad.top + h - ((v - min) / (max - min)) * h;
+
+        // Baseline Line
+        let dBase = `M ${getX(0)} ${getY(valid[0].baseline_aqi || valid[0].aqi)}`;
+        let dObs = `M ${getX(0)} ${getY(valid[0].aqi)}`;
+        for (let i = 1; i < valid.length; i++) {
+          dBase += ` L ${getX(i)} ${getY(valid[i].baseline_aqi || valid[i].aqi)}`;
+          dObs += ` L ${getX(i)} ${getY(valid[i].aqi)}`;
+        }
+
+        const basePath = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        basePath.setAttribute("d", dBase);
+        basePath.setAttribute("fill", "none");
+        basePath.setAttribute("stroke", "#64748b");
+        basePath.setAttribute("stroke-width", "1.5");
+        basePath.setAttribute("stroke-dasharray", "4,4");
+        svg.appendChild(basePath);
+
+        const obsPath = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        obsPath.setAttribute("d", dObs);
+        obsPath.setAttribute("fill", "none");
+        obsPath.setAttribute("stroke", "#38bdf8");
+        obsPath.setAttribute("stroke-width", "2.5");
+        svg.appendChild(obsPath);
+
+        // Highlight anomaly departure points
+        valid.forEach((pt, idx) => {
+          if (pt.is_anomaly) {
+            const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+            circle.setAttribute("cx", getX(idx));
+            circle.setAttribute("cy", getY(pt.aqi));
+            circle.setAttribute("r", "5.5");
+            circle.setAttribute("fill", "#ef4444");
+            circle.setAttribute("stroke", "#ffffff");
+            circle.setAttribute("stroke-width", "2");
+            svg.appendChild(circle);
+          }
+        });
+      }
+
+      window.AirGuard.onRegionChange(r => loadAnomalies(r));
+      const btnRefresh = document.getElementById("btn-refresh");
+      if (btnRefresh) {
+        btnRefresh.addEventListener("click", () => loadAnomalies(window.AirGuard.getCurrentRegion()));
+      }
+
+      if (activeRegion) {
+        loadAnomalies(activeRegion);
+      } else {
+        loadAnomalies(window.AirGuard.getCurrentRegion() || { id: 1, name: "Chennai" });
+      }
+    });
+  </script>
+</body>
+</html>

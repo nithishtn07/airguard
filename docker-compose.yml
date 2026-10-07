@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  airguard-ai:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: airguard_ai_app
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - ENVIRONMENT=production
+      - DEBUG=False
+      - APP_HOST=0.0.0.0
+      - APP_PORT=8000
+      - DATABASE_URL=sqlite:///./data/airguard.db
+    volumes:
+      - airguard_data:/app/data
+
+volumes:
+  airguard_data:
+    driver: local

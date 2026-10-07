@@ -1,0 +1,1440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AirGuard AI — Environmental Insights &amp; Compliance</title>
+  <meta name="description" content="Phase 9: Interactive Location Selection, Custom Time-Window Analysis, Verified Public Compliance Intelligence, and Condition-Conditioned Best Practices.">
+
+  <!-- Google Fonts: Inter & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Leaflet Map CSS -->
+  <link rel="stylesheet" href="/static/vendor/leaflet.css">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="/static/styles/index.css">
+
+  <style>
+    /* Environmental Insights SaaS Styling */
+    .insights-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    @media (max-width: 1024px) {
+      .insights-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .search-box-wrap {
+      position: relative;
+      margin-bottom: 1rem;
+    }
+    .search-input-field {
+      width: 100%;
+      background: var(--bg-card-subtle);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-md, 8px);
+      padding: 0.75rem 2.8rem 0.75rem 1rem;
+      color: var(--text-primary);
+      font-size: 0.95rem;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+    .search-input-field:focus {
+      border-color: var(--accent-emerald);
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+    }
+    .search-icon-btn {
+      position: absolute;
+      right: 0.75rem;
+      top: 50%;
+      transform: translateY(-50%);
+      background: transparent;
+      border: none;
+      color: var(--text-muted, #64748b);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .search-results-dropdown {
+      position: absolute;
+      top: calc(100% + 4px);
+      left: 0;
+      right: 0;
+      background: var(--bg-card);
+      border: 1px solid var(--border-default);
+      border-radius: 8px;
+      max-height: 220px;
+      overflow-y: auto;
+      z-index: 1000;
+      display: none;
+      box-shadow: var(--shadow-md);
+    }
+    .search-results-dropdown.visible {
+      display: block;
+    }
+    .search-result-item {
+      padding: 0.65rem 1rem;
+      border-bottom: 1px solid var(--border-subtle);
+      cursor: pointer;
+      font-size: 0.88rem;
+      color: var(--text-primary);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: background 0.15s ease;
+    }
+    .search-result-item:hover {
+      background: var(--bg-card-hover);
+      color: var(--accent-emerald);
+    }
+    .search-result-item:last-child {
+      border-bottom: none;
+    }
+    .interactive-mini-map {
+      height: 280px;
+      border-radius: var(--radius-md, 8px);
+      overflow: hidden;
+      border: 1px solid var(--border-subtle);
+      margin-top: 0.75rem;
+    }
+    .loc-metadata-box {
+      background: var(--bg-card-subtle);
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      padding: 0.9rem;
+      margin-top: 0.75rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 0.75rem;
+    }
+    .loc-meta-item .meta-label {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .loc-meta-item .meta-val {
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-top: 0.15rem;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .date-control-panel {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      align-items: flex-end;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px;
+      padding: 1.25rem;
+      margin-bottom: 1.5rem;
+      box-shadow: var(--shadow-card);
+    }
+    .date-input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      flex: 1;
+      min-width: 170px;
+    }
+    .date-input-group label {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .date-input-group input[type="date"] {
+      background: var(--bg-card-subtle);
+      border: 1px solid var(--border-default);
+      border-radius: 6px;
+      padding: 0.65rem 0.85rem;
+      color: var(--text-primary);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      outline: none;
+    }
+    .date-input-group input[type="date"]:focus {
+      border-color: var(--accent-emerald);
+    }
+    .quick-preset-btn {
+      background: var(--bg-card-subtle);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+      font-size: 0.78rem;
+      padding: 0.45rem 0.75rem;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .quick-preset-btn:hover, .quick-preset-btn.active {
+      background: rgba(16, 185, 129, 0.15);
+      border-color: var(--accent-emerald);
+      color: var(--accent-emerald);
+    }
+    .coverage-banner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+      padding: 1rem 1.25rem;
+      border-radius: 8px;
+      border: 1px solid var(--border-subtle);
+      background: var(--bg-card);
+      margin-bottom: 1.5rem;
+      box-shadow: var(--shadow-card);
+    }
+    .coverage-banner.good {
+      border-color: rgba(16, 185, 129, 0.4);
+      background: rgba(16, 185, 129, 0.08);
+    }
+    .coverage-banner.partial {
+      border-color: rgba(245, 158, 11, 0.4);
+      background: rgba(245, 158, 11, 0.08);
+    }
+    .coverage-banner.empty {
+      border-color: rgba(239, 68, 68, 0.4);
+      background: rgba(239, 68, 68, 0.08);
+    }
+    .compliance-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      padding: 1.15rem;
+      margin-bottom: 1rem;
+      transition: border-color 0.2s ease;
+      box-shadow: var(--shadow-card);
+    }
+    .compliance-card:hover {
+      border-color: var(--accent-emerald);
+    }
+    .source-verify-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      color: var(--accent-emerald);
+      font-size: 0.82rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: color 0.15s ease;
+    }
+    .source-verify-link:hover {
+      color: var(--accent-emerald-light);
+      text-decoration: underline;
+    }
+    .practice-col {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      padding: 1.25rem;
+      box-shadow: var(--shadow-card);
+    }
+    .practice-item {
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .practice-item:last-child {
+      border-bottom: none;
+    }
+    .tab-btn-pill {
+      background: transparent;
+      border: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+      padding: 0.35rem 0.75rem;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .tab-btn-pill.active {
+      background: var(--accent-emerald);
+      color: #ffffff;
+      font-weight: 700;
+      border-color: var(--accent-emerald);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-shell">
+
+    <!-- SIDEBAR -->
+    <aside class="app-sidebar" id="app-sidebar" aria-label="Main Navigation">
+      <div class="sidebar-header">
+        <a href="/" class="sidebar-brand">
+          <div class="sidebar-brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/>
+            </svg>
+          </div>
+          <div class="sidebar-brand-text">
+            <span class="brand-title">AIRGUARD AI</span>
+            <span class="brand-subtitle">Environmental Intel</span>
+          </div>
+        </a>
+        <button id="sidebar-close-btn" class="sidebar-close-btn" aria-label="Close sidebar">✕</button>
+      </div>
+
+      <div class="sidebar-nav-container">
+        <div class="nav-group">
+          <div class="nav-group-title">Core Telemetry</div>
+          <a href="/dashboard" class="nav-link">
+            <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg></span>
+            <span class="nav-text">Dashboard</span>
+          </a>
+          <a href="/air-quality" class="nav-link">
+            <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m4.93 4.93 4.24 4.24"/><path d="m14.83 9.17 4.24-4.24"/></svg></span>
+            <span class="nav-text">Air Quality</span>
+          </a>
+          <a href="/predictions" class="nav-link">
+            <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m22 7-8.5 8.5-5-5L2 17"/><path d="M16 7h6v6"/></svg></span>
+            <span class="nav-text">Predictions</span>
+          </a>
+          <a href="/history" class="nav-link">
+            <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>
+            <span class="nav-text">Historical Analysis</span>
+          </a>
+        </div>
+
+        <div class="nav-group">
+          <div class="nav-group-title">Spatial & Analytics</div>
+          <a href="/hotspots" class="nav-link">
+            <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2c.5 3 2.5 4.5 4 6.5 1.5 2 2 4.5 1 7.5-1 3-3.5 5-6 5s-6-2.5-6-5.5c0-3 2-5 3.5-7 .5-.7 1-1.5 1.5-2.5.5-1 1-2.5 2-4z"/></svg></span>
+            <span class="nav-text">Hotspots</span>
+          </a>
+          <a href="/anomalies" class="nav-link">
+            <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></span>
+            <span class="nav-text">Anomalies</span>
+          </a>
+          <a href="/risk" class="nav-link">
+            <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>
+            <span class="nav-text">Risk Intelligence</span>
+          </a>
+          <a href="/recommendations" class="nav-link">
+            <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></span>
+            <span class="nav-text">Recommendations</span>
+          </a>
+        </div>
+
+        <div class="nav-group">
+          <div class="nav-group-title">Operations & Geospatial</div>
+          <a href="/environmental-insights" class="nav-link active">
+            <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></span>
+            <span class="nav-text">Environmental Insights</span>
+          </a>
+          <a href="/alerts" class="nav-link">
+            <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg></span>
+            <span class="nav-text">Alerts</span>
+          </a>
+          <a href="/map" class="nav-link">
+            <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" x2="9" y1="3" y2="18"/><line x1="15" x2="15" y1="6" y2="21"/></svg></span>
+            <span class="nav-text">Air Quality Map</span>
+          </a>
+          <a href="/settings" class="nav-link">
+            <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg></span>
+            <span class="nav-text">Settings</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="system-status-indicator">
+          <span class="status-indicator-dot good"></span>
+          <span class="status-text">Production Operational</span>
+        </div>
+      </div>
+    </aside>
+
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+    <!-- MAIN APP CANVAS -->
+    <div class="app-main">
+
+      <!-- TOPBAR -->
+      <header class="app-topbar">
+        <div class="topbar-left">
+          <button id="mobile-menu-trigger" class="mobile-menu-btn" aria-label="Toggle navigation">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+          </button>
+          <div style="display:flex; align-items:center; gap:0.5rem;">
+            <span style="font-size:0.82rem; color:var(--text-muted); font-weight:600; text-transform:uppercase; letter-spacing:0.05em;">AirGuard AI Platform</span>
+            <span style="color:var(--border-subtle);">/</span>
+            <span style="font-size:0.85rem; color:var(--text-main); font-weight:700;">Environmental Insights</span>
+          </div>
+        </div>
+
+        <div class="topbar-right">
+          <div class="status-pill active" id="live-status-pill">
+            <span class="pulse-indicator"></span>
+            <span>Location Intelligence Active</span>
+          </div>
+          <a href="/alerts" class="btn-ghost btn-sm" title="Alerts" style="text-decoration:none;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+          </a>
+          <a href="/settings" class="btn-ghost btn-sm" title="Settings" style="text-decoration:none;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          </a>
+        </div>
+      </header>
+
+      <!-- CANVAS CONTENT -->
+      <main class="content-canvas">
+
+        <!-- Page Hero Header -->
+        <div class="page-hero-header">
+          <div>
+            <span class="metric-kicker">Custom Regional Intelligence</span>
+            <h1 style="font-size: 1.6rem; font-weight: 800; color: var(--text-main); margin-top: 0.2rem;">Environmental Insights &amp; Compliance</h1>
+            <p style="color: var(--text-muted); font-size: 0.92rem; margin-top: 0.35rem;">
+              Interactive geocoded region selection, custom time-window atmospheric telemetry, verified regulatory records, and practical condition-conditioned clean air practices.
+            </p>
+          </div>
+        </div>
+
+        <!-- SECTION 1: LOCATION SELECTION & INTERACTIVE MAP -->
+        <div class="insights-grid">
+
+          <!-- Left Column: Location Selection & Geocoding -->
+          <div class="card-clean">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.85rem;">
+              <div>
+                <span class="metric-kicker">Location Selection</span>
+                <h3 style="font-size: 1.1rem; font-weight: 700; color: var(--text-main);">Method A: Search or Select</h3>
+              </div>
+              <span class="text-secondary-label">Geocoding API Ready</span>
+            </div>
+
+            <!-- Search Field -->
+            <div class="search-box-wrap">
+              <input type="text" id="loc-search-input" class="search-input-field" placeholder="Search city, district, state (e.g. Chennai, Mumbai, Delhi)..." autocomplete="off">
+              <button id="loc-search-btn" class="search-icon-btn" title="Search">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              </button>
+              <div id="search-dropdown" class="search-results-dropdown"></div>
+            </div>
+
+            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.75rem;">
+              <span style="font-size: 0.78rem; color: #94a3b8; align-self: center;">Quick Cities:</span>
+              <button class="quick-preset-btn" onclick="selectPresetCity('Chennai', 13.0827, 80.2707, 'Tamil Nadu', 'India', 1)">Chennai</button>
+              <button class="quick-preset-btn" onclick="selectPresetCity('Delhi', 28.6139, 77.2090, 'Delhi', 'India', 2)">Delhi</button>
+              <button class="quick-preset-btn" onclick="selectPresetCity('Mumbai', 19.0760, 72.8777, 'Maharashtra', 'India', 3)">Mumbai</button>
+              <button class="quick-preset-btn" onclick="selectPresetCity('Bengaluru', 12.9716, 77.5946, 'Karnataka', 'India', 4)">Bengaluru</button>
+              <button class="quick-preset-btn" onclick="selectPresetCity('Kolkata', 22.5726, 88.3639, 'West Bengal', 'India', 5)">Kolkata</button>
+              <button class="quick-preset-btn" onclick="selectPresetCity('Hyderabad', 17.3850, 78.4867, 'Telangana', 'India', 6)">Hyderabad</button>
+            </div>
+
+            <!-- Centralized Location State Box -->
+            <div class="loc-metadata-box">
+              <div class="loc-meta-item">
+                <div class="meta-label">Selected Region</div>
+                <div class="meta-val" id="disp-loc-name" style="font-family:'Inter',sans-serif; color:#38bdf8;">Chennai</div>
+              </div>
+              <div class="loc-meta-item">
+                <div class="meta-label">Latitude</div>
+                <div class="meta-val" id="disp-loc-lat">13.0827° N</div>
+              </div>
+              <div class="loc-meta-item">
+                <div class="meta-label">Longitude</div>
+                <div class="meta-val" id="disp-loc-lon">80.2707° E</div>
+              </div>
+              <div class="loc-meta-item">
+                <div class="meta-label">Coverage Status</div>
+                <div class="meta-val" id="disp-loc-coverage" style="color:#22c55e;">Ready</div>
+              </div>
+            </div>
+            <div style="font-size: 0.78rem; color: #94a3b8; margin-top: 0.5rem;" id="disp-loc-full">
+              Full: Chennai, Tamil Nadu, India
+            </div>
+          </div>
+
+          <!-- Right Column: Interactive Map Click (Method B) -->
+          <div class="card-clean">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+              <div>
+                <span class="metric-kicker">Geospatial Picker</span>
+                <h3 style="font-size: 1.1rem; font-weight: 700; color: var(--text-main);">Method B: Click Interactive Map</h3>
+              </div>
+              <span class="badge-status info">Reverse Geocoding</span>
+            </div>
+            <p style="font-size: 0.8rem; color: #94a3b8; margin: 0;">
+              Click anywhere on the map to pinpoint arbitrary coordinates and retrieve local environmental context.
+            </p>
+            <div id="picker-map" class="interactive-mini-map"></div>
+          </div>
+
+        </div>
+
+        <!-- SECTION 2: CUSTOM TIME-WINDOW CONTROLS -->
+        <div class="date-control-panel">
+          <div class="date-input-group">
+            <label for="start-date-input">From Date (UTC/Local)</label>
+            <input type="date" id="start-date-input" value="2026-09-30">
+          </div>
+          <div class="date-input-group">
+            <label for="end-date-input">To Date (UTC/Local)</label>
+            <input type="date" id="end-date-input" value="2026-10-07">
+          </div>
+
+          <div style="display: flex; gap: 0.4rem; align-items: center; flex-wrap: wrap;">
+            <button class="quick-preset-btn active" id="btn-pre-7d" onclick="setPresetDateRange(7)">Last 7 Days</button>
+            <button class="quick-preset-btn" id="btn-pre-14d" onclick="setPresetDateRange(14)">Last 14 Days</button>
+            <button class="quick-preset-btn" id="btn-pre-30d" onclick="setPresetDateRange(30)">Last 30 Days</button>
+            <button class="quick-preset-btn" id="btn-pre-90d" onclick="setPresetDateRange(90)">Last 90 Days</button>
+          </div>
+
+          <button id="btn-run-analysis" class="btn-primary" style="height: 42px; padding: 0 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m21 21-6-6m2-5a7 7 0 1 1-14 0 7 7 0 0 1 14 0z"/></svg>
+            <span>Analyze Environmental Window</span>
+          </button>
+        </div>
+
+        <!-- SECTION 3: DATA COVERAGE AUDIT BANNER -->
+        <div id="coverage-banner" class="coverage-banner good">
+          <div style="display: flex; align-items: center; gap: 0.75rem;">
+            <div id="coverage-icon-dot" style="width: 12px; height: 12px; border-radius: 50%; background: #22c55e;"></div>
+            <div>
+              <div style="font-weight: 700; color: var(--text-main); font-size: 0.95rem;" id="coverage-status-title">Data Available (100% Coverage)</div>
+              <div style="font-size: 0.82rem; color: #94a3b8;" id="coverage-status-desc">168 chronological observations found across requested analysis window.</div>
+            </div>
+          </div>
+          <div style="display: flex; gap: 1rem; align-items: center;">
+            <div style="text-align: right;">
+              <div style="font-size: 0.72rem; color: #94a3b8; text-transform: uppercase;">Observation Count</div>
+              <div style="font-size: 1.05rem; font-weight: 700; color: var(--text-main); font-family:'JetBrains Mono',monospace;" id="coverage-obs-count">168 pts</div>
+            </div>
+            <div style="text-align: right;">
+              <div style="font-size: 0.72rem; color: #94a3b8; text-transform: uppercase;">Reliability</div>
+              <div style="font-size: 1.05rem; font-weight: 700; color: #22c55e; font-family:'JetBrains Mono',monospace;" id="coverage-pct-disp">100%</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION 4: STATISTICAL METRICS SUMMARY (4 CARDS) -->
+        <div class="metric-grid-4" style="margin-bottom: 1.5rem;">
+          <div class="card-clean">
+            <span class="metric-kicker">Statistical Summary</span>
+            <div class="metric-big-number" id="stat-avg-aqi" style="color: #38bdf8;">—</div>
+            <div class="metric-trend-row">
+              <span class="badge-status info" id="stat-avg-badge">Average AQI</span>
+              <span class="text-secondary-label" id="stat-median-aqi">Median: —</span>
+            </div>
+          </div>
+
+          <div class="card-clean">
+            <span class="metric-kicker">Peak Observed</span>
+            <div class="metric-big-number" id="stat-max-aqi" style="color: #ef4444;">—</div>
+            <div class="metric-trend-row">
+              <span class="badge-status danger">Max AQI</span>
+              <span class="text-secondary-label" id="stat-std-aqi">Std Dev: —</span>
+            </div>
+          </div>
+
+          <div class="card-clean">
+            <span class="metric-kicker">Cleanest Period</span>
+            <div class="metric-big-number" id="stat-min-aqi" style="color: #22c55e;">—</div>
+            <div class="metric-trend-row">
+              <span class="badge-status good">Min AQI</span>
+              <span class="text-secondary-label">Baseline Level</span>
+            </div>
+          </div>
+
+          <div class="card-clean">
+            <span class="metric-kicker">Mathematical Trend</span>
+            <div class="metric-big-number" id="stat-trend" style="font-size: 1.6rem; color: #e2e8f0;">—</div>
+            <div class="metric-trend-row">
+              <span class="badge-status" id="stat-trend-badge">Split-Window</span>
+              <span class="text-secondary-label" id="stat-trend-sub">Deterministic</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION 5: HISTORICAL POLLUTION TRAJECTORY CHART -->
+        <div class="card-clean" style="margin-bottom: 1.5rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 1rem;">
+            <div>
+              <span class="metric-kicker">Atmospheric Trajectory</span>
+              <h3 style="font-size: 1.15rem; font-weight: 700; color: #ffffff;">Pollution Trend Visualization</h3>
+            </div>
+
+            <!-- Pollutant Tab Switcher -->
+            <div style="display: flex; gap: 0.35rem; flex-wrap: wrap;" id="pollutant-tabs">
+              <button class="tab-btn-pill active" onclick="switchChartPollutant('aqi')">AQI</button>
+              <button class="tab-btn-pill" onclick="switchChartPollutant('pm25')">PM2.5</button>
+              <button class="tab-btn-pill" onclick="switchChartPollutant('pm10')">PM10</button>
+              <button class="tab-btn-pill" onclick="switchChartPollutant('no2')">NO2</button>
+              <button class="tab-btn-pill" onclick="switchChartPollutant('so2')">SO2</button>
+              <button class="tab-btn-pill" onclick="switchChartPollutant('o3')">Ozone (O3)</button>
+              <button class="tab-btn-pill" onclick="switchChartPollutant('co')">CO</button>
+            </div>
+          </div>
+
+          <!-- SVG Responsive Trend Chart -->
+          <div class="chart-container-clean" style="height: 290px;">
+            <svg id="insights-chart-svg" class="chart-svg" viewBox="0 0 800 290" preserveAspectRatio="none"></svg>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #334155; padding-top: 0.75rem; margin-top: 0.75rem; font-size: 0.8rem; color: #94a3b8;">
+            <span id="chart-start-label">—</span>
+            <span id="chart-meta-info" style="font-family:'JetBrains Mono',monospace;">Selected Metric: AQI</span>
+            <span id="chart-end-label">—</span>
+          </div>
+        </div>
+
+        <!-- SECTION 6 & 7: WEATHER RELATIONSHIP & ML PREDICTION (2 COLUMNS) -->
+        <div class="insights-grid">
+
+          <!-- Weather Relationship (Non-Causal) -->
+          <div class="card-clean">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+              <div>
+                <span class="metric-kicker">Environmental Context</span>
+                <h3 style="font-size: 1.1rem; font-weight: 700; color: #ffffff;">Meteorological Coexistence</h3>
+              </div>
+              <span class="badge-status info">Pearson Correlation</span>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 0.75rem; margin-bottom: 1rem;">
+              <div style="background: rgba(15,23,42,0.5); padding: 0.65rem; border-radius: 6px; border: 1px solid #334155;">
+                <div style="font-size: 0.72rem; color: #94a3b8;">Avg Temp</div>
+                <div style="font-size: 1.05rem; font-weight: 700; color: #ffffff; font-family:'JetBrains Mono',monospace;" id="wx-avg-temp">—</div>
+              </div>
+              <div style="background: rgba(15,23,42,0.5); padding: 0.65rem; border-radius: 6px; border: 1px solid #334155;">
+                <div style="font-size: 0.72rem; color: #94a3b8;">Avg Humidity</div>
+                <div style="font-size: 1.05rem; font-weight: 700; color: #ffffff; font-family:'JetBrains Mono',monospace;" id="wx-avg-humidity">—</div>
+              </div>
+              <div style="background: rgba(15,23,42,0.5); padding: 0.65rem; border-radius: 6px; border: 1px solid #334155;">
+                <div style="font-size: 0.72rem; color: #94a3b8;">Avg Wind</div>
+                <div style="font-size: 1.05rem; font-weight: 700; color: #ffffff; font-family:'JetBrains Mono',monospace;" id="wx-avg-wind">—</div>
+              </div>
+              <div style="background: rgba(15,23,42,0.5); padding: 0.65rem; border-radius: 6px; border: 1px solid #334155;">
+                <div style="font-size: 0.72rem; color: #94a3b8;">Total Rain</div>
+                <div style="font-size: 1.05rem; font-weight: 700; color: #ffffff; font-family:'JetBrains Mono',monospace;" id="wx-avg-rain">—</div>
+              </div>
+            </div>
+
+            <!-- Scientific Insights & Correlation Notes -->
+            <div id="wx-insights-list" style="font-size: 0.85rem; color: #e2e8f0; display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 0.85rem;">
+              <div style="padding: 0.5rem; background: rgba(30,41,59,0.5); border-radius: 6px;">Computing meteorological relationship...</div>
+            </div>
+
+            <div style="border-top: 1px solid rgba(51, 65, 85, 0.5); padding-top: 0.65rem; font-size: 0.75rem; color: #94a3b8; font-style: italic;">
+              ⚠️ Scientific Note: Observed correlations reflect environmental coexistence and meteorological dispersion dynamics; they do not establish unverified causal relationships.
+            </div>
+          </div>
+
+          <!-- ML Prediction Integration -->
+          <div class="card-clean">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+              <div>
+                <span class="metric-kicker">Phase 4 Predictive Engine</span>
+                <h3 style="font-size: 1.1rem; font-weight: 700; color: #ffffff;">ML Air Quality Forecast</h3>
+              </div>
+              <span class="badge-status good" id="ml-avail-badge">Available</span>
+            </div>
+
+            <div id="ml-container">
+              <div style="display: flex; align-items: center; justify-content: space-between; background: rgba(15,23,42,0.6); border: 1px solid #334155; border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
+                <div>
+                  <div style="font-size: 0.75rem; color: #94a3b8; text-transform: uppercase;">Forecast Horizon</div>
+                  <div style="font-size: 1.15rem; font-weight: 700; color: #ffffff;">Next 24 Hours</div>
+                  <div style="font-size: 0.75rem; color: #38bdf8; margin-top: 0.2rem;" id="ml-model-name">Random Forest Regressor (v1.0)</div>
+                </div>
+                <div style="text-align: right;">
+                  <div style="font-size: 0.75rem; color: #94a3b8; text-transform: uppercase;">Predicted AQI</div>
+                  <div style="font-size: 2.2rem; font-weight: 800; font-family:'JetBrains Mono',monospace; color:#38bdf8;" id="ml-pred-val">—</div>
+                  <span class="badge-status info" id="ml-pred-cat">Calculating</span>
+                </div>
+              </div>
+
+              <!-- Model Evaluation Metrics -->
+              <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; text-align: center; font-size: 0.8rem;">
+                <div style="background: rgba(30,41,59,0.4); padding: 0.5rem; border-radius: 6px;">
+                  <div style="color: #94a3b8; font-size: 0.7rem;">MAE</div>
+                  <div style="font-weight: 700; color: #ffffff;" id="ml-mae">14.2 AQI</div>
+                </div>
+                <div style="background: rgba(30,41,59,0.4); padding: 0.5rem; border-radius: 6px;">
+                  <div style="color: #94a3b8; font-size: 0.7rem;">RMSE</div>
+                  <div style="font-weight: 700; color: #ffffff;" id="ml-rmse">18.5 AQI</div>
+                </div>
+                <div style="background: rgba(30,41,59,0.4); padding: 0.5rem; border-radius: 6px;">
+                  <div style="color: #94a3b8; font-size: 0.7rem;">R² Score</div>
+                  <div style="font-weight: 700; color: #22c55e;" id="ml-r2">0.81</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Honest Graceful Empty State (Hidden when available) -->
+            <div id="ml-unavailable-box" style="display: none; background: rgba(15,23,42,0.6); border: 1px solid #334155; border-radius: 8px; padding: 1.5rem; text-align: center;">
+              <div style="color: #f59e0b; margin-bottom: 0.5rem;">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              </div>
+              <div style="font-weight: 700; color: #ffffff; font-size: 0.95rem;">Prediction Unavailable for this Location</div>
+              <p style="font-size: 0.82rem; color: #94a3b8; margin-top: 0.35rem;" id="ml-unavailable-reason">
+                The selected location does not have enough local historical observations for reliable model training.
+              </p>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- SECTION 8: ENVIRONMENTAL & COMPLIANCE INFORMATION -->
+        <div class="card-clean" style="margin-bottom: 1.5rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem;">
+            <div>
+              <span class="metric-kicker">Regulatory Intelligence</span>
+              <h3 style="font-size: 1.15rem; font-weight: 700; color: #ffffff;">Environmental &amp; Compliance Information</h3>
+            </div>
+            <span class="badge-status info">Official Public Sources Only</span>
+          </div>
+          <p style="font-size: 0.85rem; color: #94a3b8; margin-bottom: 1rem;">
+            Legitimate publicly documented notices, Clean Air Action Plans (NCAP / PRANA), and regulatory compliance directives retrieved from official statutory authorities (CPCB, State Pollution Control Boards). Zero fabricated records.
+          </p>
+
+          <div id="compliance-records-container">
+            <div style="padding: 1.5rem; text-align: center; color: #94a3b8; font-size: 0.9rem;">
+              Querying verified regulatory documentation...
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION 9: CONDITION-CONDITIONED BEST PRACTICES -->
+        <div class="card-clean" style="margin-bottom: 1.5rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.5rem;">
+            <div>
+              <span class="metric-kicker">Actionable Mitigation</span>
+              <h3 style="font-size: 1.15rem; font-weight: 700; color: #ffffff;">Environmental Best Practices</h3>
+            </div>
+            <span class="badge-status good" id="bp-condition-badge">Condition-Conditioned</span>
+          </div>
+          <p style="font-size: 0.85rem; color: #38bdf8; margin-bottom: 1.25rem;" id="bp-condition-summary">
+            Evaluating observed particulate and gas concentrations to provide targeted exposure reduction and community mitigation guidelines.
+          </p>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem;">
+
+            <!-- Pillar A: Personal Exposure Reduction -->
+            <div class="practice-col">
+              <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;">
+                <div style="width: 24px; height: 24px; border-radius: 50%; background: rgba(56, 189, 248, 0.2); display: flex; align-items: center; justify-content: center; color: #38bdf8; font-weight: 800; font-size: 0.75rem;">A</div>
+                <h4 style="font-size: 0.95rem; font-weight: 700; color: #ffffff; margin: 0;">Personal Exposure Reduction</h4>
+              </div>
+              <div id="bp-personal-list"></div>
+            </div>
+
+            <!-- Pillar B: Community-Level Practices -->
+            <div class="practice-col">
+              <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;">
+                <div style="width: 24px; height: 24px; border-radius: 50%; background: rgba(34, 197, 94, 0.2); display: flex; align-items: center; justify-content: center; color: #22c55e; font-weight: 800; font-size: 0.75rem;">B</div>
+                <h4 style="font-size: 0.95rem; font-weight: 700; color: #ffffff; margin: 0;">Community-Level Practices</h4>
+              </div>
+              <div id="bp-community-list"></div>
+            </div>
+
+            <!-- Pillar C: Local Air-Quality Improvement -->
+            <div class="practice-col">
+              <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;">
+                <div style="width: 24px; height: 24px; border-radius: 50%; background: rgba(168, 85, 247, 0.2); display: flex; align-items: center; justify-content: center; color: #a855f7; font-weight: 800; font-size: 0.75rem;">C</div>
+                <h4 style="font-size: 0.95rem; font-weight: 700; color: #ffffff; margin: 0;">Local Air-Quality Improvement</h4>
+              </div>
+              <div id="bp-local-list"></div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- SECTION 10: SOURCE ATTRIBUTION & AUDIT FOOTER -->
+        <div class="card-clean" style="border-style: dashed;">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+            <div>
+              <span class="metric-kicker">Data Transparency</span>
+              <h4 style="font-size: 0.95rem; font-weight: 700; color: #ffffff; margin: 0.2rem 0;">Attribution &amp; Source Integrity</h4>
+            </div>
+            <div style="font-size: 0.8rem; color: #94a3b8; font-family:'JetBrains Mono',monospace;" id="source-last-retrieved">
+              Last Retrieved: —
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1rem; font-size: 0.82rem;">
+            <div>
+              <div style="color: #94a3b8; font-size: 0.72rem; text-transform: uppercase;">Air Quality Telemetry</div>
+              <div style="font-weight: 600; color: #ffffff; margin-top: 0.15rem;" id="attr-aq-source">Open-Meteo Air Quality API / Local CAAQMS Stations</div>
+            </div>
+            <div>
+              <div style="color: #94a3b8; font-size: 0.72rem; text-transform: uppercase;">Meteorological Data</div>
+              <div style="font-weight: 600; color: #ffffff; margin-top: 0.15rem;" id="attr-wx-source">Open-Meteo Historical Weather Archive</div>
+            </div>
+            <div>
+              <div style="color: #94a3b8; font-size: 0.72rem; text-transform: uppercase;">Compliance &amp; Regulations</div>
+              <div style="font-weight: 600; color: #ffffff; margin-top: 0.15rem;" id="attr-comp-source">CPCB / PRANA Portal / State Pollution Control Boards</div>
+            </div>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="/static/vendor/leaflet.js"></script>
+  <script src="/static/components/shared.js"></script>
+
+  <script>
+    // Centralized Selected Location State
+    let selectedLocation = {
+      name: "Chennai",
+      display_name: "Chennai, Tamil Nadu, India",
+      latitude: 13.0827,
+      longitude: 80.2707,
+      state: "Tamil Nadu",
+      country: "India",
+      matched_region_id: 1
+    };
+
+    let pickerMap = null;
+    let pickerMarker = null;
+    let latestAnalysisData = null;
+    let currentChartMetric = "aqi";
+
+    // Initialize Page on DOM Load
+    document.addEventListener("DOMContentLoaded", () => {
+      if (window.AirGuard && window.AirGuard.initNav) {
+        window.AirGuard.initNav();
+      }
+
+      initPickerMap();
+      setupLocationSearch();
+      setupPresetDates();
+
+      // Trigger initial analysis for default location
+      runEnvironmentalAnalysis();
+
+      document.getElementById("btn-run-analysis").addEventListener("click", () => {
+        runEnvironmentalAnalysis();
+      });
+    });
+
+    // --- LEAFLET PICKER MAP (METHOD B) ---
+    function initPickerMap() {
+      const container = document.getElementById("picker-map");
+      if (!container || !window.L) return;
+
+      pickerMap = L.map("picker-map", {
+        center: [selectedLocation.latitude, selectedLocation.longitude],
+        zoom: 7,
+        zoomControl: true
+      });
+
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution: '&copy; <a href="https://openstreetmap.org">OpenStreetMap</a>',
+        maxZoom: 18
+      }).addTo(pickerMap);
+
+      pickerMarker = L.marker([selectedLocation.latitude, selectedLocation.longitude], {
+        draggable: true
+      }).addTo(pickerMap);
+
+      pickerMarker.on("dragend", async (e) => {
+        const pos = e.target.getLatLng();
+        await handleMapCoordinatesSelected(pos.lat, pos.lng);
+      });
+
+      pickerMap.on("click", async (e) => {
+        const lat = e.latlng.lat;
+        const lon = e.latlng.lng;
+        pickerMarker.setLatLng([lat, lon]);
+        await handleMapCoordinatesSelected(lat, lon);
+      });
+    }
+
+    async function handleMapCoordinatesSelected(lat, lon) {
+      updateLocationDisplay({
+        name: "Reverse Geocoding...",
+        display_name: `${lat.toFixed(4)}, ${lon.toFixed(4)}`,
+        latitude: lat,
+        longitude: lon,
+        state: "—",
+        country: "—"
+      });
+
+      try {
+        const resp = await fetch(`/api/location/reverse?lat=${lat}&lon=${lon}`);
+        if (!resp.ok) throw new Error("Reverse geocode failed");
+        const data = await resp.json();
+        const loc = data.location;
+        selectedLocation = loc;
+        updateLocationDisplay(loc);
+      } catch (err) {
+        console.error("Reverse geocode error:", err);
+        selectedLocation = {
+          name: `${lat.toFixed(4)}, ${lon.toFixed(4)}`,
+          display_name: `Coordinates: ${lat.toFixed(4)}, ${lon.toFixed(4)}`,
+          latitude: lat,
+          longitude: lon,
+          state: "Custom Coordinate",
+          country: "—",
+          matched_region_id: null
+        };
+        updateLocationDisplay(selectedLocation);
+      }
+    }
+
+    function updateLocationDisplay(loc) {
+      document.getElementById("disp-loc-name").textContent = loc.name || "Custom Region";
+      document.getElementById("disp-loc-lat").textContent = `${Number(loc.latitude).toFixed(4)}°`;
+      document.getElementById("disp-loc-lon").textContent = `${Number(loc.longitude).toFixed(4)}°`;
+      document.getElementById("disp-loc-full").textContent = `Full: ${loc.display_name || loc.name}`;
+
+      if (loc.matched_region_id) {
+        document.getElementById("disp-loc-coverage").textContent = "Monitored Region";
+        document.getElementById("disp-loc-coverage").style.color = "#22c55e";
+      } else {
+        document.getElementById("disp-loc-coverage").textContent = "Arbitrary Location";
+        document.getElementById("disp-loc-coverage").style.color = "#38bdf8";
+      }
+
+      if (pickerMap && pickerMarker) {
+        pickerMarker.setLatLng([loc.latitude, loc.longitude]);
+        pickerMap.setView([loc.latitude, loc.longitude], Math.max(pickerMap.getZoom(), 7));
+      }
+    }
+
+    // --- SEARCH FIELD (METHOD A) ---
+    function setupLocationSearch() {
+      const input = document.getElementById("loc-search-input");
+      const btn = document.getElementById("loc-search-btn");
+      const dropdown = document.getElementById("search-dropdown");
+      let searchTimeout = null;
+
+      async function doSearch() {
+        const q = input.value.trim();
+        if (q.length < 2) {
+          dropdown.classList.remove("visible");
+          return;
+        }
+
+        try {
+          const resp = await fetch(`/api/location/search?q=${encodeURIComponent(q)}&limit=6`);
+          if (!resp.ok) return;
+          const data = await resp.json();
+          renderSearchResults(data.results || []);
+        } catch (e) {
+          console.error("Search error:", e);
+        }
+      }
+
+      input.addEventListener("input", () => {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(doSearch, 300);
+      });
+
+      input.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          doSearch();
+        }
+      });
+
+      btn.addEventListener("click", doSearch);
+
+      document.addEventListener("click", (e) => {
+        if (!input.contains(e.target) && !dropdown.contains(e.target)) {
+          dropdown.classList.remove("visible");
+        }
+      });
+    }
+
+    function renderSearchResults(results) {
+      const dropdown = document.getElementById("search-dropdown");
+      dropdown.innerHTML = "";
+
+      if (results.length === 0) {
+        const empty = document.createElement("div");
+        empty.style.padding = "0.75rem 1rem";
+        empty.style.fontSize = "0.85rem";
+        empty.style.color = "#94a3b8";
+        empty.textContent = "No locations found matching query.";
+        dropdown.appendChild(empty);
+        dropdown.classList.add("visible");
+        return;
+      }
+
+      results.forEach(r => {
+        const item = document.createElement("div");
+        item.className = "search-result-item";
+        item.innerHTML = `
+          <div>
+            <div style="font-weight:600; color:#ffffff;">${r.name}</div>
+            <div style="font-size:0.75rem; color:#94a3b8;">${r.display_name}</div>
+          </div>
+          <span style="font-size:0.75rem; font-family:'JetBrains Mono',monospace; color:#38bdf8;">${r.latitude.toFixed(2)}, ${r.longitude.toFixed(2)}</span>
+        `;
+        item.addEventListener("click", () => {
+          selectedLocation = r;
+          updateLocationDisplay(r);
+          document.getElementById("loc-search-input").value = r.name;
+          dropdown.classList.remove("visible");
+          runEnvironmentalAnalysis();
+        });
+        dropdown.appendChild(item);
+      });
+
+      dropdown.classList.add("visible");
+    }
+
+    function selectPresetCity(name, lat, lon, state, country, regionId) {
+      selectedLocation = {
+        name: name,
+        display_name: `${name}, ${state}, ${country}`,
+        latitude: lat,
+        longitude: lon,
+        state: state,
+        country: country,
+        matched_region_id: regionId
+      };
+      document.getElementById("loc-search-input").value = name;
+      updateLocationDisplay(selectedLocation);
+      runEnvironmentalAnalysis();
+    }
+
+    // --- PRESET DATES ---
+    function setupPresetDates() {
+      // Default to last 7 days
+      setPresetDateRange(7);
+    }
+
+    function setPresetDateRange(days) {
+      document.querySelectorAll("[id^='btn-pre-']").forEach(b => b.classList.remove("active"));
+      const btn = document.getElementById(`btn-pre-${days}d`);
+      if (btn) btn.classList.add("active");
+
+      const now = new Date();
+      const endStr = now.toISOString().split("T")[0];
+      const startObj = new Date(now.getTime() - (days * 24 * 60 * 60 * 1000));
+      const startStr = startObj.toISOString().split("T")[0];
+
+      document.getElementById("start-date-input").value = startStr;
+      document.getElementById("end-date-input").value = endStr;
+    }
+
+    // --- MAIN ANALYSIS EXECUTION ---
+    async function runEnvironmentalAnalysis() {
+      const startVal = document.getElementById("start-date-input").value;
+      const endVal = document.getElementById("end-date-input").value;
+
+      if (!startVal || !endVal) {
+        alert("Please select both start and end dates.");
+        return;
+      }
+
+      const analyzeBtn = document.getElementById("btn-run-analysis");
+      analyzeBtn.disabled = true;
+      analyzeBtn.innerHTML = `<span>Analyzing...</span>`;
+
+      try {
+        const queryParams = new URLSearchParams({
+          lat: selectedLocation.latitude,
+          lon: selectedLocation.longitude,
+          name: selectedLocation.name || "",
+          display_name: selectedLocation.display_name || "",
+          state: selectedLocation.state || "",
+          country: selectedLocation.country || "India",
+          start_date: startVal,
+          end_date: endVal
+        });
+
+        const resp = await fetch(`/api/environmental-insights/analysis?${queryParams.toString()}`);
+        if (!resp.ok) {
+          const err = await resp.json();
+          alert(`Analysis Error: ${err.detail || "Unable to process request."}`);
+          return;
+        }
+
+        const data = await resp.json();
+        latestAnalysisData = data;
+        renderAnalysisResults(data);
+      } catch (err) {
+        console.error("Analysis execution failure:", err);
+        alert("Network or service error during environmental analysis.");
+      } finally {
+        analyzeBtn.disabled = false;
+        analyzeBtn.innerHTML = `
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m21 21-6-6m2-5a7 7 0 1 1-14 0 7 7 0 0 1 14 0z"/></svg>
+          <span>Analyze Environmental Window</span>
+        `;
+      }
+    }
+
+    // --- RENDER ALL RESULTS ---
+    function renderAnalysisResults(data) {
+      renderCoverageBanner(data.coverage, data.data_available);
+      renderSummaryCards(data.summary, data.data_available);
+      renderTrajectoryChart(data.time_series, currentChartMetric);
+      renderWeatherContext(data.weather_context);
+      renderMLPrediction(data.ml_prediction);
+      renderComplianceRecords(data.environmental_records);
+      renderBestPractices(data.best_practices);
+      renderSourceAttribution(data.data_sources);
+    }
+
+    function renderCoverageBanner(coverage, available) {
+      const banner = document.getElementById("coverage-banner");
+      const dot = document.getElementById("coverage-icon-dot");
+      const title = document.getElementById("coverage-status-title");
+      const desc = document.getElementById("coverage-status-desc");
+      const count = document.getElementById("coverage-obs-count");
+      const pct = document.getElementById("coverage-pct-disp");
+
+      banner.className = "coverage-banner";
+      if (!available || coverage.observations_count === 0) {
+        banner.classList.add("empty");
+        dot.style.background = "#ef4444";
+        title.textContent = "No Data Found";
+        pct.textContent = "0%";
+        pct.style.color = "#ef4444";
+      } else if (coverage.percentage >= 80) {
+        banner.classList.add("good");
+        dot.style.background = "#22c55e";
+        title.textContent = `Data Available (${coverage.percentage}% Coverage)`;
+        pct.textContent = `${coverage.percentage}%`;
+        pct.style.color = "#22c55e";
+      } else {
+        banner.classList.add("partial");
+        dot.style.background = "#f59e0b";
+        title.textContent = `Partial Data (${coverage.percentage}% Coverage)`;
+        pct.textContent = `${coverage.percentage}%`;
+        pct.style.color = "#f59e0b";
+      }
+
+      desc.textContent = coverage.message || "Observations audited against timeline.";
+      count.textContent = `${coverage.observations_count || 0} pts`;
+    }
+
+    function renderSummaryCards(summary, available) {
+      if (!available || !summary) {
+        document.getElementById("stat-avg-aqi").textContent = "Unavailable";
+        document.getElementById("stat-avg-aqi").style.color = "#94a3b8";
+        document.getElementById("stat-max-aqi").textContent = "—";
+        document.getElementById("stat-min-aqi").textContent = "—";
+        document.getElementById("stat-trend").textContent = "Insufficient Data";
+        document.getElementById("stat-median-aqi").textContent = "Median: —";
+        document.getElementById("stat-std-aqi").textContent = "Std Dev: —";
+        return;
+      }
+
+      const avg = summary.average_aqi;
+      const elAvg = document.getElementById("stat-avg-aqi");
+      elAvg.textContent = Math.round(avg);
+      if (avg <= 50) elAvg.style.color = "#22c55e";
+      else if (avg <= 100) elAvg.style.color = "#eab308";
+      else if (avg <= 200) elAvg.style.color = "#f97316";
+      else elAvg.style.color = "#ef4444";
+
+      document.getElementById("stat-max-aqi").textContent = Math.round(summary.maximum_aqi);
+      document.getElementById("stat-min-aqi").textContent = Math.round(summary.minimum_aqi);
+      document.getElementById("stat-median-aqi").textContent = `Median: ${Math.round(summary.median_aqi)}`;
+      document.getElementById("stat-std-aqi").textContent = `Std Dev: ±${summary.std_aqi}`;
+
+      const trendEl = document.getElementById("stat-trend");
+      const trendBadge = document.getElementById("stat-trend-badge");
+      trendEl.textContent = summary.trend;
+
+      trendBadge.className = "badge-status";
+      if (summary.trend === "Improving") {
+        trendEl.style.color = "#22c55e";
+        trendBadge.classList.add("good");
+      } else if (summary.trend === "Worsening") {
+        trendEl.style.color = "#ef4444";
+        trendBadge.classList.add("danger");
+      } else {
+        trendEl.style.color = "#e2e8f0";
+        trendBadge.classList.add("info");
+      }
+    }
+
+    function switchChartPollutant(metric) {
+      currentChartMetric = metric;
+      document.querySelectorAll("#pollutant-tabs .tab-btn-pill").forEach(b => b.classList.remove("active"));
+      event.target.classList.add("active");
+      document.getElementById("chart-meta-info").textContent = `Selected Metric: ${metric.toUpperCase()}`;
+
+      if (latestAnalysisData && latestAnalysisData.time_series) {
+        renderTrajectoryChart(latestAnalysisData.time_series, metric);
+      }
+    }
+
+    function renderTrajectoryChart(series, metricKey) {
+      const svg = document.getElementById("insights-chart-svg");
+      svg.innerHTML = "";
+
+      const startLabel = document.getElementById("chart-start-label");
+      const endLabel = document.getElementById("chart-end-label");
+
+      if (!series || series.length < 2) {
+        const txt = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        txt.setAttribute("x", "400");
+        txt.setAttribute("y", "145");
+        txt.setAttribute("fill", "#64748b");
+        txt.setAttribute("font-size", "14");
+        txt.setAttribute("text-anchor", "middle");
+        txt.textContent = "No observations available for the requested time range.";
+        svg.appendChild(txt);
+        startLabel.textContent = "—";
+        endLabel.textContent = "—";
+        return;
+      }
+
+      const validPoints = series
+        .map(p => ({
+          time: p.timestamp,
+          val: p[metricKey] !== null && p[metricKey] !== undefined ? Number(p[metricKey]) : null
+        }))
+        .filter(p => p.val !== null && !isNaN(p.val));
+
+      if (validPoints.length < 2) {
+        const txt = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        txt.setAttribute("x", "400");
+        txt.setAttribute("y", "145");
+        txt.setAttribute("fill", "#64748b");
+        txt.setAttribute("font-size", "14");
+        txt.setAttribute("text-anchor", "middle");
+        txt.textContent = `Insufficient observations recorded for ${metricKey.toUpperCase()}.`;
+        svg.appendChild(txt);
+        return;
+      }
+
+      startLabel.textContent = validPoints[0].time.substring(0, 10);
+      endLabel.textContent = validPoints[validPoints.length - 1].time.substring(0, 10);
+
+      const vals = validPoints.map(p => p.val);
+      const minV = Math.floor(Math.min(...vals) * 0.9);
+      const maxV = Math.ceil(Math.max(...vals) * 1.1) || 100;
+      const range = maxV - minV || 1;
+
+      const W = 800;
+      const H = 290;
+      const padL = 45;
+      const padR = 20;
+      const padT = 25;
+      const padB = 30;
+      const plotW = W - padL - padR;
+      const plotH = H - padT - padB;
+
+      // Draw Grid lines
+      for (let i = 0; i <= 4; i++) {
+        const y = padT + (plotH * (i / 4));
+        const val = Math.round(maxV - (range * (i / 4)));
+
+        const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+        line.setAttribute("x1", padL);
+        line.setAttribute("y1", y);
+        line.setAttribute("x2", W - padR);
+        line.setAttribute("y2", y);
+        line.setAttribute("stroke", "rgba(51, 65, 85, 0.4)");
+        line.setAttribute("stroke-dasharray", "3,3");
+        svg.appendChild(line);
+
+        const lbl = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        lbl.setAttribute("x", padL - 8);
+        lbl.setAttribute("y", y + 4);
+        lbl.setAttribute("fill", "#64748b");
+        lbl.setAttribute("font-size", "10");
+        lbl.setAttribute("text-anchor", "end");
+        lbl.setAttribute("font-family", "JetBrains Mono");
+        lbl.textContent = val;
+        svg.appendChild(lbl);
+      }
+
+      // Generate Line Points
+      const pts = validPoints.map((p, idx) => {
+        const x = padL + (idx / (validPoints.length - 1)) * plotW;
+        const y = padT + plotH - ((p.val - minV) / range) * plotH;
+        return [x, y];
+      });
+
+      const dPath = pts.reduce((acc, pt, i) => i === 0 ? `M ${pt[0]} ${pt[1]}` : `${acc} L ${pt[0]} ${pt[1]}`, "");
+      const areaPath = `${dPath} L ${pts[pts.length - 1][0]} ${padT + plotH} L ${pts[0][0]} ${padT + plotH} Z`;
+
+      // Gradient defs
+      const defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
+      defs.innerHTML = `
+        <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.35"/>
+          <stop offset="100%" stop-color="#38bdf8" stop-opacity="0.0"/>
+        </linearGradient>
+      `;
+      svg.appendChild(defs);
+
+      // Area
+      const area = document.createElementNS("http://www.w3.org/2000/svg", "path");
+      area.setAttribute("d", areaPath);
+      area.setAttribute("fill", "url(#chartGrad)");
+      svg.appendChild(area);
+
+      // Stroke Line
+      const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+      path.setAttribute("d", dPath);
+      path.setAttribute("fill", "none");
+      path.setAttribute("stroke", "#38bdf8");
+      path.setAttribute("stroke-width", "2.5");
+      path.setAttribute("stroke-linejoin", "round");
+      svg.appendChild(path);
+    }
+
+    function renderWeatherContext(wx) {
+      const container = document.getElementById("wx-insights-list");
+      container.innerHTML = "";
+
+      if (!wx || !wx.metrics) {
+        document.getElementById("wx-avg-temp").textContent = "—";
+        document.getElementById("wx-avg-humidity").textContent = "—";
+        document.getElementById("wx-avg-wind").textContent = "—";
+        document.getElementById("wx-avg-rain").textContent = "—";
+        container.innerHTML = `<div style="color:#94a3b8; font-size:0.85rem;">Meteorological context unavailable for this date range.</div>`;
+        return;
+      }
+
+      const m = wx.metrics;
+      document.getElementById("wx-avg-temp").textContent = m.temperature?.avg !== null ? `${m.temperature.avg}°C` : "—";
+      document.getElementById("wx-avg-humidity").textContent = m.humidity?.avg !== null ? `${m.humidity.avg}%` : "—";
+      document.getElementById("wx-avg-wind").textContent = m.wind_speed?.avg !== null ? `${m.wind_speed.avg} m/s` : "—";
+      document.getElementById("wx-avg-rain").textContent = m.rainfall?.avg !== null ? `${m.rainfall.avg} mm` : "0 mm";
+
+      if (wx.scientific_notes && wx.scientific_notes.length > 0) {
+        wx.scientific_notes.forEach(note => {
+          const item = document.createElement("div");
+          item.style.padding = "0.5rem 0.75rem";
+          item.style.background = "rgba(30, 41, 59, 0.4)";
+          item.style.borderRadius = "6px";
+          item.style.borderLeft = "3px solid #38bdf8";
+          item.textContent = note;
+          container.appendChild(item);
+        });
+      } else {
+        const item = document.createElement("div");
+        item.style.padding = "0.5rem 0.75rem";
+        item.style.color = "#94a3b8";
+        item.textContent = "Normal meteorological dispersion conditions observed across analysis period.";
+        container.appendChild(item);
+      }
+    }
+
+    function renderMLPrediction(ml) {
+      const container = document.getElementById("ml-container");
+      const unavail = document.getElementById("ml-unavailable-box");
+      const badge = document.getElementById("ml-avail-badge");
+
+      if (ml && ml.available) {
+        container.style.display = "block";
+        unavail.style.display = "none";
+        badge.textContent = "Model Forecast";
+        badge.className = "badge-status good";
+
+        document.getElementById("ml-pred-val").textContent = Math.round(ml.predicted_aqi);
+        document.getElementById("ml-pred-cat").textContent = ml.predicted_category || "Forecast";
+        document.getElementById("ml-model-name").textContent = `${ml.model_name} (${ml.model_version})`;
+        if (ml.evaluation_metrics) {
+          document.getElementById("ml-mae").textContent = `${ml.evaluation_metrics.mae} AQI`;
+          document.getElementById("ml-rmse").textContent = `${ml.evaluation_metrics.rmse} AQI`;
+          document.getElementById("ml-r2").textContent = ml.evaluation_metrics.r2_score;
+        }
+      } else {
+        container.style.display = "none";
+        unavail.style.display = "block";
+        badge.textContent = "Unavailable";
+        badge.className = "badge-status";
+        document.getElementById("ml-unavailable-reason").textContent = ml?.reason || "Prediction unavailable for this location.";
+      }
+    }
+
+    function renderComplianceRecords(comp) {
+      const container = document.getElementById("compliance-records-container");
+      container.innerHTML = "";
+
+      const records = comp?.records || [];
+      if (records.length === 0) {
+        container.innerHTML = `
+          <div style="background:rgba(15,23,42,0.5); border:1px solid #334155; border-radius:8px; padding:1.5rem; text-align:center;">
+            <div style="font-weight:600; color:#ffffff; margin-bottom:0.35rem;">No Public Regulatory Records Found</div>
+            <p style="font-size:0.85rem; color:#94a3b8; margin:0;">
+              ${comp?.no_records_reason || "No relevant publicly available environmental or compliance records were found for this location and selected period."}
+            </p>
+          </div>
+        `;
+        return;
+      }
+
+      records.forEach(r => {
+        const card = document.createElement("div");
+        card.className = "compliance-card";
+        card.innerHTML = `
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:0.5rem; flex-wrap:wrap; gap:0.5rem;">
+            <div>
+              <span class="badge-status info" style="font-size:0.7rem; text-transform:uppercase;">${r.category}</span>
+              <h4 style="font-size:1.02rem; font-weight:700; color:#ffffff; margin:0.3rem 0 0.15rem 0;">${r.title}</h4>
+              <div style="font-size:0.78rem; color:#94a3b8;">Region: ${r.location} | Published: ${r.date}</div>
+            </div>
+            <a href="${r.source_url}" target="_blank" rel="noopener noreferrer" class="source-verify-link">
+              <span>View Official Portal</span>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            </a>
+          </div>
+          <p style="font-size:0.86rem; color:#cbd5e1; line-height:1.5; margin:0.5rem 0;">${r.description}</p>
+          <div style="font-size:0.75rem; color:#64748b; font-family:'JetBrains Mono',monospace;">Authority: ${r.source_name}</div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function renderBestPractices(bp) {
+      if (!bp) return;
+
+      document.getElementById("bp-condition-summary").textContent = bp.condition_summary;
+      const badge = document.getElementById("bp-condition-badge");
+      badge.textContent = bp.condition_level.toUpperCase();
+      badge.className = "badge-status";
+      if (bp.condition_level === "hazardous") badge.classList.add("danger");
+      else if (bp.condition_level === "elevated") badge.classList.add("warning");
+      else badge.classList.add("good");
+
+      function populateList(elId, items) {
+        const el = document.getElementById(elId);
+        el.innerHTML = "";
+        (items || []).forEach(item => {
+          const div = document.createElement("div");
+          div.className = "practice-item";
+          div.innerHTML = `
+            <div style="font-size:0.88rem; font-weight:700; color:#ffffff; display:flex; justify-content:space-between; align-items:center;">
+              <span>${item.title}</span>
+              <span class="badge-status" style="font-size:0.65rem; text-transform:uppercase;">${item.priority}</span>
+            </div>
+            <p style="font-size:0.8rem; color:#94a3b8; line-height:1.45; margin:0.35rem 0 0 0;">${item.description}</p>
+          `;
+          el.appendChild(div);
+        });
+      }
+
+      populateList("bp-personal-list", bp.personal_exposure_reduction);
+      populateList("bp-community-list", bp.community_level_practices);
+      populateList("bp-local-list", bp.local_air_quality_improvement);
+    }
+
+    function renderSourceAttribution(sources) {
+      if (!sources) return;
+      document.getElementById("source-last-retrieved").textContent = `Last Retrieved: ${sources.retrieved_at || "—"}`;
+      document.getElementById("attr-aq-source").textContent = sources.air_quality || "Open-Meteo Air Quality / CAAQMS";
+      document.getElementById("attr-wx-source").textContent = sources.weather || "Open-Meteo Weather Archive";
+      document.getElementById("attr-comp-source").textContent = sources.compliance || "CPCB / PRANA / State PCBs";
+    }
+  </script>
+</body>
+</html>

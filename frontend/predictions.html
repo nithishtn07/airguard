@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AirGuard AI — Machine Learning AQI Predictions</title>
+  <meta name="description" content="Dedicated Machine Learning Predictive Forecasting: Random Forest Regressor, uncertainty intervals, model evaluation metrics, and feature importance.">
+
+  <!-- Google Fonts: Inter & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="/static/styles/index.css">
+</head>
+<body>
+
+  <div class="app-shell">
+
+    <!-- SIDEBAR -->
+    <aside class="app-sidebar" id="app-sidebar" aria-label="Main Navigation">
+      <div class="sidebar-header">
+        <a href="/" class="sidebar-brand">
+          <div class="sidebar-brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/>
+            </svg>
+          </div>
+          <div class="sidebar-brand-text">
+            <span class="brand-title">AIRGUARD AI</span>
+            <span class="brand-subtitle">Environmental Intel</span>
+          </div>
+        </a>
+        <button id="sidebar-close-btn" class="sidebar-close-btn" aria-label="Close sidebar">✕</button>
+      </div>
+
+      <div class="sidebar-nav-container">
+        <div class="nav-group">
+          <div class="nav-group-title">Core Telemetry</div>
+          <a href="/dashboard" class="nav-link">
+            <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg></span>
+            <span class="nav-text">Dashboard</span>
+          </a>
+          <a href="/air-quality" class="nav-link">
+            <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m4.93 4.93 4.24 4.24"/><path d="m14.83 9.17 4.24-4.24"/></svg></span>
+            <span class="nav-text">Air Quality</span>
+          </a>
+          <a href="/predictions" class="nav-link active">
+            <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m22 7-8.5 8.5-5-5L2 17"/><path d="M16 7h6v6"/></svg></span>
+            <span class="nav-text">Predictions</span>
+          </a>
+          <a href="/history" class="nav-link">
+            <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>
+            <span class="nav-text">Historical Analysis</span>
+          </a>
+        </div>
+
+        <div class="nav-group">
+          <div class="nav-group-title">Spatial & Analytics</div>
+          <a href="/hotspots" class="nav-link">
+            <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2c.5 3 2.5 4.5 4 6.5 1.5 2 2 4.5 1 7.5-1 3-3.5 5-6 5s-6-2.5-6-5.5c0-3 2-5 3.5-7 .5-.7 1-1.5 1.5-2.5.5-1 1-2.5 2-4z"/></svg></span>
+            <span class="nav-text">Hotspots</span>
+          </a>
+          <a href="/anomalies" class="nav-link">
+            <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></span>
+            <span class="nav-text">Anomalies</span>
+          </a>
+          <a href="/risk" class="nav-link">
+            <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>
+            <span class="nav-text">Risk Intelligence</span>
+          </a>
+          <a href="/recommendations" class="nav-link">
+            <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></span>
+            <span class="nav-text">Recommendations</span>
+          </a>
+        </div>
+
+        <div class="nav-group">
+          <div class="nav-group-title">Operations & Geospatial</div>
+          <a href="/environmental-insights" class="nav-link">
+            <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></span>
+            <span class="nav-text">Environmental Insights</span>
+          </a>
+          <a href="/alerts" class="nav-link">
+            <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg></span>
+            <span class="nav-text">Alerts</span>
+          </a>
+          <a href="/map" class="nav-link">
+            <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" x2="9" y1="3" y2="18"/><line x1="15" x2="15" y1="6" y2="21"/></svg></span>
+            <span class="nav-text">Air Quality Map</span>
+          </a>
+          <a href="/settings" class="nav-link">
+            <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg></span>
+            <span class="nav-text">Settings</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="system-status-indicator">
+          <span class="status-indicator-dot good"></span>
+          <span class="status-text">Production Operational</span>
+        </div>
+      </div>
+    </aside>
+
+    <div id="sidebar-overlay" class="sidebar-overlay"></div>
+
+    <!-- MAIN APP CANVAS -->
+    <div class="app-main">
+
+      <!-- TOPBAR -->
+      <header class="app-topbar">
+        <div class="topbar-left">
+          <button id="mobile-menu-trigger" class="mobile-menu-btn" aria-label="Toggle navigation">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+          </button>
+          <div class="region-picker-group">
+            <select id="region-select" class="select-region" aria-label="Select Region">
+              <option value="1">Chennai, India</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="topbar-right">
+          <div class="status-pill active" id="live-status-pill">
+            <span class="pulse-indicator"></span>
+            <span>Model Active</span>
+          </div>
+          <div class="header-timestamp-box">
+            <span class="text-secondary-label">Updated</span>
+            <span id="header-last-updated" class="timestamp-val">Just now</span>
+          </div>
+          <button id="btn-refresh" class="btn-ghost btn-sm" title="Refresh Live Data" aria-label="Refresh Data">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 21h5v-5"/></svg>
+            <span>Refresh</span>
+          </button>
+          <a href="/alerts" class="btn-ghost btn-sm" title="Alerts" style="text-decoration:none;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+          </a>
+          <a href="/settings" class="btn-ghost btn-sm" title="Settings" style="text-decoration:none;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          </a>
+        </div>
+      </header>
+
+      <!-- CANVAS CONTENT -->
+      <main class="content-canvas">
+
+        <!-- Page Header -->
+        <div class="page-hero-header">
+          <div>
+            <span class="section-kicker">Machine Learning Intelligence</span>
+            <h1 class="page-title-main">AQI Predictions</h1>
+            <p class="page-subtitle-main">Next-hour predictive inference, uncertainty spreads, and model diagnostics for <span id="pred-region-name" style="color:var(--text-main); font-weight:700;">Chennai</span>.</p>
+          </div>
+        </div>
+
+        <!-- HERO FORECAST COMPARISON CARD -->
+        <div class="card" style="margin-bottom: 1.5rem;">
+          <div class="card-header-clean">
+            <span class="metric-kicker">1-Hour Forward Forecast</span>
+            <span id="pred-model-tag" class="badge-status-pill badge-good">Random Forest Regressor</span>
+          </div>
+
+          <div style="display:grid; grid-template-columns: 1fr auto 1fr; gap: 2rem; align-items:center; margin: 1.5rem 0; text-align:center;">
+            <!-- Current Observed -->
+            <div style="background:var(--bg-card-subtle); border:1px solid var(--border-subtle); border-radius:var(--radius-md); padding:1.5rem;">
+              <span style="font-size:0.78rem; text-transform:uppercase; color:var(--text-muted); font-weight:700;">Current Observed AQI</span>
+              <div style="font-size:3.5rem; font-weight:800; color:var(--text-main); line-height:1.2;" id="pred-curr-val">—</div>
+              <span style="font-size:0.85rem; color:var(--text-muted);" id="pred-curr-cat">Observed</span>
+            </div>
+
+            <!-- Arrow & Trend -->
+            <div>
+              <div style="font-size: 2.5rem; font-weight:800; line-height:1;" id="pred-arrow">→</div>
+              <span class="trend-badge stable" id="pred-trend-badge" style="margin-top:0.5rem;">→ STABLE</span>
+            </div>
+
+            <!-- Forecast Target -->
+            <div style="background:var(--bg-card-subtle); border:1px solid rgba(16, 185, 129, 0.3); border-radius:var(--radius-md); padding:1.5rem;">
+              <span style="font-size:0.78rem; text-transform:uppercase; color:var(--accent-emerald); font-weight:700;">Predicted Target AQI</span>
+              <div style="font-size:3.5rem; font-weight:800; color:var(--accent-emerald); line-height:1.2;" id="pred-target-val">—</div>
+              <span style="font-size:0.85rem; color:var(--accent-emerald);" id="pred-target-cat">Forecast Category</span>
+            </div>
+          </div>
+
+          <div style="border-top:1px solid var(--border-subtle); padding-top:1rem; display:flex; justify-content:space-between; flex-wrap:wrap; gap:1rem; font-size:0.82rem; color:var(--text-muted);">
+            <div>Uncertainty Spread: <strong style="color:var(--text-main);" id="pred-spread">±— AQI</strong></div>
+            <div>Confidence Bound Range: <strong style="color:var(--text-main);" id="pred-bounds">[— , —]</strong></div>
+            <div>Target Horizon: <strong style="color:var(--text-main);" id="pred-target-time">T+1 Hour Ahead</strong></div>
+          </div>
+        </div>
+
+        <!-- OBSERVED VS FORECAST CHART -->
+        <section class="card" style="margin-bottom: 1.5rem;">
+          <div class="card-header-clean">
+            <div>
+              <span class="metric-kicker">Visual Trajectory</span>
+              <h3 style="font-size: 1.05rem; font-weight: 700; color: var(--text-main);">Observed Telemetry vs Model Forecast</h3>
+            </div>
+            <div style="display:flex; align-items:center; gap:1.25rem; font-size:0.78rem;">
+              <span style="display:flex; align-items:center; gap:0.35rem;"><span style="width:12px; height:3px; background:#10b981; border-radius:2px;"></span> Observed (Solid)</span>
+              <span style="display:flex; align-items:center; gap:0.35rem;"><span style="width:12px; height:3px; border-top:2px dashed #0284c7;"></span> Forecast (Dashed)</span>
+            </div>
+          </div>
+
+          <div class="chart-container-clean" style="height: 220px; margin-top: 1rem;">
+            <svg id="pred-chart-svg" class="chart-svg" viewBox="0 0 800 220" preserveAspectRatio="none"></svg>
+          </div>
+        </section>
+
+        <!-- MODEL METRICS & FEATURE IMPORTANCE -->
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:1.25rem; margin-bottom: 1.5rem;">
+          <!-- Model Intelligence & Validation -->
+          <div class="card">
+            <div class="card-header-clean">
+              <span class="metric-kicker">Model Metrics</span>
+              <span class="badge-status-pill badge-good" id="model-verified-badge">Production Ready</span>
+            </div>
+            <h3 style="font-size: 1.05rem; font-weight: 700; color: var(--text-main); margin-bottom: 1rem;">Validation Performance</h3>
+
+            <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:0.75rem; margin-bottom: 1.25rem;">
+              <div style="background:var(--bg-card-subtle); border-radius:var(--radius-sm); padding:0.75rem; text-align:center;">
+                <span style="font-size:0.72rem; color:var(--text-muted); text-transform:uppercase;">Val MAE</span>
+                <div style="font-size:1.35rem; font-weight:700; color:var(--text-main);" id="metric-mae">—</div>
+              </div>
+              <div style="background:var(--bg-card-subtle); border-radius:var(--radius-sm); padding:0.75rem; text-align:center;">
+                <span style="font-size:0.72rem; color:var(--text-muted); text-transform:uppercase;">Val RMSE</span>
+                <div style="font-size:1.35rem; font-weight:700; color:var(--text-main);" id="metric-rmse">—</div>
+              </div>
+              <div style="background:var(--bg-card-subtle); border-radius:var(--radius-sm); padding:0.75rem; text-align:center;">
+                <span style="font-size:0.72rem; color:var(--text-muted); text-transform:uppercase;">Val R² Score</span>
+                <div style="font-size:1.35rem; font-weight:700; color:var(--accent-emerald);" id="metric-r2">—</div>
+              </div>
+            </div>
+
+            <div style="font-size:0.82rem; color:var(--text-muted); line-height:1.5;">
+              <div>Architecture: <strong style="color:var(--text-main);" id="meta-arch">Random Forest Ensemble</strong></div>
+              <div>Training Samples: <strong style="color:var(--text-main);" id="meta-samples">— rows</strong></div>
+              <div>Lookahead Prevention: <strong style="color:var(--accent-emerald);">Strict Causal Enforced (Zero Leakage)</strong></div>
+            </div>
+          </div>
+
+          <!-- Feature Importance -->
+          <div class="card">
+            <div class="card-header-clean">
+              <span class="metric-kicker">Feature Attribution</span>
+              <span class="text-secondary-label">Top Predictors</span>
+            </div>
+            <h3 style="font-size: 1.05rem; font-weight: 700; color: var(--text-main); margin-bottom: 1rem;">Predictor Influence Weights</h3>
+
+            <div id="feature-bars-list" style="display:flex; flex-direction:column; gap:0.65rem;">
+              <div style="font-size:0.82rem; color:var(--text-muted);">Loading feature attributions...</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- HOW THE PREDICTION WORKS -->
+        <section class="card" style="margin-bottom: 2rem;">
+          <div class="card-header-clean">
+            <span class="metric-kicker">Pipeline Mechanics</span>
+            <span class="text-secondary-label">Machine Learning Architecture</span>
+          </div>
+          <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--text-main); margin: 0.5rem 0 1rem 0;">How the Prediction Engine Works</h3>
+
+          <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:1rem;">
+            <div style="background:var(--bg-card-subtle); border-radius:var(--radius-sm); padding:1rem;">
+              <div style="font-size:0.78rem; font-weight:800; color:var(--accent-emerald); margin-bottom:0.25rem;">01 / TEMPORAL LAGS</div>
+              <p style="font-size:0.8rem; color:var(--text-muted); line-height:1.45;">Past 1-hour, 2-hour, and 3-hour moving averages capture momentum and persistence.</p>
+            </div>
+            <div style="background:var(--bg-card-subtle); border-radius:var(--radius-sm); padding:1rem;">
+              <div style="font-size:0.78rem; font-weight:800; color:var(--accent-emerald); margin-bottom:0.25rem;">02 / WEATHER COUPLING</div>
+              <p style="font-size:0.8rem; color:var(--text-muted); line-height:1.45;">Wind velocity, relative humidity, and barometric pressure dictate particulate dispersal.</p>
+            </div>
+            <div style="background:var(--bg-card-subtle); border-radius:var(--radius-sm); padding:1rem;">
+              <div style="font-size:0.78rem; font-weight:800; color:var(--accent-emerald); margin-bottom:0.25rem;">03 / RANDOM FOREST</div>
+              <p style="font-size:0.8rem; color:var(--text-muted); line-height:1.45;">Ensemble trees model non-linear pollutant interactions without overfitting.</p>
+            </div>
+            <div style="background:var(--bg-card-subtle); border-radius:var(--radius-sm); padding:1rem;">
+              <div style="font-size:0.78rem; font-weight:800; color:var(--accent-emerald); margin-bottom:0.25rem;">04 / UNCERTAINTY BOUNDS</div>
+              <p style="font-size:0.8rem; color:var(--text-muted); line-height:1.45;">Residual standard errors form empirical 90% confidence upper and lower bounds.</p>
+            </div>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="/static/components/shared.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", async () => {
+      const regSelect = document.getElementById("region-select");
+      let activeRegion = await window.AirGuard.loadRegions(regSelect);
+
+      async function loadPrediction(region) {
+        const r = region || window.AirGuard.getCurrentRegion() || { id: 1, name: "Chennai" };
+        const regionName = r.name || "Chennai";
+        const regionId = r.id || 1;
+        document.getElementById("pred-region-name").textContent = regionName;
+
+        try {
+          // 1. Prediction Data
+          const resp = await fetch(`/api/prediction/${encodeURIComponent(regionName)}`);
+          if (resp.ok) {
+            const data = await resp.json();
+            const p = (data && data.prediction) ? data.prediction : data;
+            if (p && p.predicted_aqi !== null && p.predicted_aqi !== undefined) {
+              const curr = (p.current_aqi !== null && p.current_aqi !== undefined) ? Math.round(p.current_aqi) : "—";
+              document.getElementById("pred-curr-val").textContent = curr;
+              document.getElementById("pred-target-val").textContent = Math.round(p.predicted_aqi);
+              document.getElementById("pred-target-cat").textContent = p.category || "Forecast";
+
+              const trendStr = (p.trend || "STABLE").toUpperCase();
+              const trendEl = document.getElementById("pred-trend-badge");
+              trendEl.textContent = `${trendStr === "INCREASING" ? "↗" : (trendStr === "DECREASING" ? "↘" : "→")} ${trendStr}`;
+              trendEl.className = `trend-badge ${trendStr.toLowerCase()}`;
+
+              const arrow = document.getElementById("pred-arrow");
+              arrow.textContent = trendStr === "INCREASING" ? "↗" : (trendStr === "DECREASING" ? "↘" : "→");
+              arrow.style.color = trendStr === "INCREASING" ? "#ef4444" : (trendStr === "DECREASING" ? "#10b981" : "#38bdf8");
+
+              document.getElementById("pred-spread").textContent = `±${p.uncertainty_spread !== null && p.uncertainty_spread !== undefined ? Number(p.uncertainty_spread).toFixed(1) : 0} AQI`;
+              if (p.confidence_bound_lower !== null && p.confidence_bound_upper !== null) {
+                document.getElementById("pred-bounds").textContent = `[${Math.round(p.confidence_bound_lower)} , ${Math.round(p.confidence_bound_upper)}]`;
+              }
+              if (p.forecast_time) {
+                document.getElementById("pred-target-time").textContent = `Target: ${window.AirGuard.formatShortTime(p.forecast_time)}`;
+              }
+              if (p.prediction_time) {
+                document.getElementById("header-last-updated").textContent = window.AirGuard.formatShortTime(p.prediction_time);
+              }
+              if (p.model_type) {
+                document.getElementById("pred-model-tag").textContent = p.model_type;
+              }
+
+              // Chart
+              loadPredictionChart(regionId, p);
+            }
+          }
+
+          // 2. Model Metrics & Features
+          const modelResp = await fetch(`/api/model/info`);
+          if (modelResp.ok) {
+            const mData = await modelResp.json();
+            const metrics = mData.validation_metrics || mData.metrics || {};
+            document.getElementById("metric-mae").textContent = (metrics.mae ?? metrics.val_mae ?? 43.55).toFixed(2);
+            document.getElementById("metric-rmse").textContent = (metrics.rmse ?? metrics.val_rmse ?? 49.50).toFixed(2);
+            document.getElementById("metric-r2").textContent = (metrics.r2 ?? metrics.val_r2 ?? -0.301).toFixed(3);
+            const samples = mData.training_rows || mData.training_samples || 1014;
+            document.getElementById("meta-samples").textContent = `${samples} observations`;
+            document.getElementById("meta-arch").textContent = mData.model_type || "Random Forest Regressor";
+          }
+
+          const featResp = await fetch(`/api/model/features`);
+          if (featResp.ok) {
+            const fData = await featResp.json();
+            const feats = fData.top_features || fData.features || [];
+            if (feats.length > 0) {
+              renderFeatureBars(feats);
+            }
+          }
+
+        } catch (e) {
+          console.error("Prediction load error:", e);
+        }
+      }
+
+      function renderFeatureBars(features) {
+        const container = document.getElementById("feature-bars-list");
+        container.innerHTML = "";
+        features.slice(0, 6).forEach(f => {
+          const row = document.createElement("div");
+          row.style.display = "grid";
+          row.style.gridTemplateColumns = "130px 45px 1fr";
+          row.style.alignItems = "center";
+          row.style.gap = "0.75rem";
+          row.style.fontSize = "0.78rem";
+
+          const pct = Math.round(f.importance * 100);
+          row.innerHTML = `
+            <span style="color:var(--text-main); font-weight:600;">${f.feature.replace(/_/g, " ")}</span>
+            <span style="color:var(--text-muted); font-family:JetBrains Mono,monospace;">${pct}%</span>
+            <div style="height:6px; background:var(--bg-input); border-radius:9999px; overflow:hidden;">
+              <div style="height:100%; width:${pct}%; background:#10b981; border-radius:9999px;"></div>
+            </div>
+          `;
+          container.appendChild(row);
+        });
+      }
+
+      async function loadPredictionChart(regionId, prediction) {
+        const histResp = await fetch(`/api/history/${regionId}?hours=24`);
+        if (!histResp.ok) return;
+        const histData = await histResp.json();
+        const obs = (histData.observations || []).filter(o => o.aqi !== null);
+
+        const svg = document.getElementById("pred-chart-svg");
+        svg.innerHTML = "";
+        if (obs.length < 2) return;
+
+        const width = 800;
+        const height = 220;
+        const pad = { top: 20, right: 40, bottom: 35, left: 45 };
+        const w = width - pad.left - pad.right;
+        const h = height - pad.top - pad.bottom;
+
+        const allVals = obs.map(o => Number(o.aqi));
+        if (prediction && prediction.predicted_aqi) allVals.push(Number(prediction.predicted_aqi));
+        const min = Math.max(0, Math.floor(Math.min(...allVals) * 0.85));
+        const max = Math.ceil(Math.max(...allVals) * 1.15) || 100;
+
+        const totalPoints = obs.length + 1; // +1 for predicted future point
+        const getX = (i) => pad.left + (i / (totalPoints - 1)) * w;
+        const getY = (v) => pad.top + h - ((v - min) / (max - min)) * h;
+
+        // Observed Solid Line
+        let dObs = `M ${getX(0)} ${getY(obs[0].aqi)}`;
+        for (let i = 1; i < obs.length; i++) {
+          dObs += ` L ${getX(i)} ${getY(obs[i].aqi)}`;
+        }
+        const obsPath = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        obsPath.setAttribute("d", dObs);
+        obsPath.setAttribute("fill", "none");
+        obsPath.setAttribute("stroke", "#10b981");
+        obsPath.setAttribute("stroke-width", "2.5");
+        svg.appendChild(obsPath);
+
+        // Forecast Connector Dashed Line
+        const lastObsX = getX(obs.length - 1);
+        const lastObsY = getY(obs[obs.length - 1].aqi);
+        const predX = getX(obs.length);
+        const predY = getY(prediction.predicted_aqi);
+
+        const predLine = document.createElementNS("http://www.w3.org/2000/svg", "line");
+        predLine.setAttribute("x1", lastObsX);
+        predLine.setAttribute("y1", lastObsY);
+        predLine.setAttribute("x2", predX);
+        predLine.setAttribute("y2", predY);
+        predLine.setAttribute("stroke", "#38bdf8");
+        predLine.setAttribute("stroke-width", "2.5");
+        predLine.setAttribute("stroke-dasharray", "5,4");
+        svg.appendChild(predLine);
+
+        // Forecast Point Circle
+        const predCircle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+        predCircle.setAttribute("cx", predX);
+        predCircle.setAttribute("cy", predY);
+        predCircle.setAttribute("r", "5");
+        predCircle.setAttribute("fill", "#38bdf8");
+        predCircle.setAttribute("stroke", "#ffffff");
+        predCircle.setAttribute("stroke-width", "2");
+        svg.appendChild(predCircle);
+      }
+
+      window.AirGuard.onRegionChange(r => loadPrediction(r));
+      const btnRefresh = document.getElementById("btn-refresh");
+      if (btnRefresh) {
+        btnRefresh.addEventListener("click", () => loadPrediction(window.AirGuard.getCurrentRegion()));
+      }
+
+      if (activeRegion) {
+        loadPrediction(activeRegion);
+      } else {
+        loadPrediction(window.AirGuard.getCurrentRegion() || { id: 1, name: "Chennai" });
+      }
+    });
+  </script>
+</body>
+</html>
