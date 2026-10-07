@@ -558,6 +558,42 @@
           </div>
         </section>
 
+        <!-- DATA SOURCE DEBUG PANEL -->
+        <section style="margin-top: 1.15rem;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.6rem;">
+            <div>
+              <span class="metric-kicker">Data Integrity</span>
+              <h3 style="font-size:1rem; font-weight:800; color:#ffffff; margin:0;">DATA SOURCE</h3>
+            </div>
+          </div>
+          <div class="card" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; padding: 1rem;">
+            <div>
+              <div style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase;">Weather Provider</div>
+              <div style="font-size:0.85rem; font-weight:600; color:var(--text-main);" id="debug-weather-source">Open-Meteo Weather API</div>
+            </div>
+            <div>
+              <div style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase;">Air Quality Provider</div>
+              <div style="font-size:0.85rem; font-weight:600; color:var(--text-main);" id="debug-aq-source">Open-Meteo Air Quality</div>
+            </div>
+            <div>
+              <div style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase;">Location</div>
+              <div style="font-size:0.85rem; font-weight:600; color:var(--text-main);" id="debug-location">—</div>
+            </div>
+            <div>
+              <div style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase;">Coordinates</div>
+              <div style="font-size:0.85rem; font-weight:600; color:var(--text-main);" id="debug-coords">—</div>
+            </div>
+            <div>
+              <div style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase;">Status</div>
+              <div style="font-size:0.85rem; font-weight:600; color:var(--status-good);" id="debug-status">LIVE</div>
+            </div>
+            <div>
+              <div style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase;">Last Updated</div>
+              <div style="font-size:0.85rem; font-weight:600; color:var(--text-main);" id="debug-last-updated">—</div>
+            </div>
+          </div>
+        </section>
+
       </main>
     </div>
   </div>
@@ -624,6 +660,32 @@
 
         const data = await resp.json();
         setConnectionStatus("LIVE");
+
+        // Set Data Source Debug Panel (Phase 16)
+        document.getElementById("debug-location").textContent = `${regionName}, ${region.state || "India"}`;
+        if (region.latitude && region.longitude) {
+          document.getElementById("debug-coords").textContent = `${region.latitude}, ${region.longitude}`;
+        }
+        document.getElementById("debug-status").textContent = "LIVE";
+        if (data.air_quality && data.air_quality.timestamp) {
+           document.getElementById("debug-last-updated").textContent = window.AirGuard.formatLocalTime(data.air_quality.timestamp);
+        } else if (data.weather && data.weather.timestamp) {
+           document.getElementById("debug-last-updated").textContent = window.AirGuard.formatLocalTime(data.weather.timestamp);
+        } else {
+           document.getElementById("debug-last-updated").textContent = "Unavailable";
+           document.getElementById("debug-status").textContent = "DATA UNAVAILABLE";
+           document.getElementById("debug-status").style.color = "var(--status-error)";
+        }
+        if (data.air_quality && data.air_quality.source) {
+          document.getElementById("debug-aq-source").textContent = data.air_quality.source;
+        } else {
+          document.getElementById("debug-aq-source").textContent = "N/A";
+        }
+        if (data.weather && data.weather.source) {
+          document.getElementById("debug-weather-source").textContent = data.weather.source;
+        } else {
+          document.getElementById("debug-weather-source").textContent = "N/A";
+        }
 
         // 1. Air Quality & Hero Dial
         const aq = data.air_quality;

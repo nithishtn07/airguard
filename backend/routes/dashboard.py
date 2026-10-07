@@ -20,6 +20,9 @@ from backend.services.risk_service import assess_environmental_risk
 from backend.services.recommendation_service import generate_recommendations
 from backend.services.alert_service import get_alerts_for_region, get_severity_color
 from backend.services.prediction_service import get_prediction_for_region
+from backend.services.weather_service import fetch_live_weather
+from backend.services.air_quality_service import fetch_live_air_quality
+from backend.services.storage_service import save_environmental_snapshot
 from backend.models.schemas import (
     MapDataResponse,
     MapRegionItem,
@@ -204,52 +207,56 @@ def get_dashboard_summary(
     try:
         now_iso = datetime.now(timezone.utc).isoformat()
 
-        # 1. Latest Air Quality Observation
-        latest_aq = (
-            db.query(AirQualityObservation)
-            .filter(AirQualityObservation.region_id == region.id)
-            .order_by(desc(AirQualityObservation.timestamp))
-            .first()
-        )
+        data_status = "LIVE"
+        try:
+            live_aq = fetch_live_air_quality(region, force_refresh=True)
+            live_weather = fetch_live_weather(region, force_refresh=True)
+            try:
+                save_environmental_snapshot(db, region.id, live_aq, live_weather)
+            except Exception as se:
+                logger.warning(f"Non-blocking storage error for snapshot: {se}")
+        except Exception as e:
+            logger.warning(f"Failed to fetch live telemetry: {e}")
+            live_aq = None
+            live_weather = None
+            data_status = "UNAVAILABLE"
+
+        # 1. Latest Air Quality Observation directly from Live API
         aq_payload = None
-        if latest_aq:
-            aq_cat, aq_col = _classify_aqi(latest_aq.aqi)
+        if live_aq:
+            aq_cat, aq_col = _classify_aqi(live_aq.aqi)
             aq_payload = {
                 "region": region.name,
                 "region_id": region.id,
-                "timestamp": latest_aq.timestamp.isoformat() if latest_aq.timestamp else None,
-                "aqi": latest_aq.aqi,
+                "timestamp": live_aq.timestamp if live_aq.timestamp else None,
+                "aqi": live_aq.aqi,
                 "category": aq_cat,
                 "category_color": aq_col,
-                "pm25": latest_aq.pm2_5,
-                "pm10": latest_aq.pm10,
-                "co": latest_aq.co,
-                "no2": latest_aq.no2,
-                "so2": latest_aq.so2,
-                "o3": latest_aq.o3,
-                "source": latest_aq.source
+                "pm25": live_aq.pm25,
+                "pm10": live_aq.pm10,
+                "co": live_aq.co,
+                "no2": live_aq.no2,
+                "so2": live_aq.so2,
+                "o3": live_aq.o3,
+                "source": live_aq.source,
+                "data_status": data_status
             }
 
-        # 2. Latest Weather Observation
-        latest_weather = (
-            db.query(WeatherObservation)
-            .filter(WeatherObservation.region_id == region.id)
-            .order_by(desc(WeatherObservation.timestamp))
-            .first()
-        )
+        # 2. Latest Weather Observation directly from Live API
         weather_payload = None
-        if latest_weather:
+        if live_weather:
             weather_payload = {
                 "region": region.name,
                 "region_id": region.id,
-                "timestamp": latest_weather.timestamp.isoformat() if latest_weather.timestamp else None,
-                "temperature": latest_weather.temperature,
-                "humidity": latest_weather.humidity,
-                "wind_speed": latest_weather.wind_speed,
-                "wind_direction": latest_weather.wind_direction,
-                "pressure": latest_weather.pressure,
-                "rainfall": latest_weather.rainfall,
-                "source": latest_weather.source
+                "timestamp": live_weather.timestamp if live_weather.timestamp else None,
+                "temperature": live_weather.temperature,
+                "humidity": live_weather.humidity,
+                "wind_speed": live_weather.wind_speed,
+                "wind_direction": live_weather.wind_direction,
+                "pressure": live_weather.pressure,
+                "rainfall": live_weather.rainfall,
+                "source": live_weather.source,
+                "data_status": data_status
             }
 
         # 3. ML Prediction (Phase 4)
